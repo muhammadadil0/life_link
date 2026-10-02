@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Menu, X, Heart, AlertTriangle, Users, LogIn, UserPlus, Sparkles, Activity } from 'lucide-react';
+import React from 'react';
+import { Heart, AlertTriangle, Users, LogIn, UserPlus, Sparkles, Activity } from 'lucide-react';
 
 export default function Navbar({ currentView, setCurrentView, currentUser, onLogout, onOpenSos }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isDonor = currentUser && currentUser.userType === 'donor';
   const isPatient = currentUser && currentUser.userType === 'patient';
@@ -255,145 +254,23 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
             )}
           </div>
 
-          {/* Mobile Hamburger Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-700 cursor-pointer"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile Right Element: Compact User Badge & Sign Out when logged in (No hamburger menu) */}
+          {currentUser && (
+            <div className="flex md:hidden items-center gap-2">
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold text-white shadow-xs ${
+                isDonor ? 'bg-emerald-600' : 'bg-red-600'
+              }`}>
+                {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+              </div>
+              <button
+                onClick={onLogout}
+                className="text-xs text-red-600 font-bold px-2.5 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 transition-all cursor-pointer"
+              >
+                Sign Out
+              </button>
+            </div>
+          )}
         </div>
-
-        {/* ============================================================== */}
-        {/* MOBILE DROPDOWN MENU: ROLE-AWARE DIFFERENTIATION              */}
-        {/* ============================================================== */}
-        {mobileMenuOpen && (
-          <div className="md:hidden mt-4 pt-4 border-t border-gray-100 space-y-2 pb-2">
-            <button
-              onClick={() => { setCurrentView('home'); setMobileMenuOpen(false); }}
-              className="w-full text-left py-2.5 px-4 rounded-xl text-gray-700 hover:bg-red-50 hover:text-red-600 font-medium text-sm"
-            >
-              Home
-            </button>
-
-            {/* Mobile Donor Navigation */}
-            {isDonor && (
-              <>
-                <button
-                  onClick={() => { setCurrentView('donor_dashboard'); setMobileMenuOpen(false); }}
-                  className="w-full text-left py-2.5 px-4 rounded-xl bg-red-50 text-red-700 font-bold text-sm flex items-center gap-2"
-                >
-                  <Heart className="w-4 h-4 fill-current" />
-                  <span>Open My Donor Portal</span>
-                </button>
-                <button
-                  onClick={() => { setCurrentView('emergency'); setMobileMenuOpen(false); }}
-                  className="w-full text-left py-2.5 px-4 rounded-xl text-gray-700 hover:bg-red-50 hover:text-red-600 font-medium text-sm flex items-center gap-2"
-                >
-                  <AlertTriangle className="w-4 h-4 text-red-600" />
-                  <span>Patients In Need of Blood</span>
-                </button>
-              </>
-            )}
-
-            {/* Mobile Patient Navigation */}
-            {isPatient && (
-              <>
-                <button
-                  onClick={() => { setCurrentView('patient_dashboard'); setMobileMenuOpen(false); }}
-                  className="w-full text-left py-2.5 px-4 rounded-xl bg-red-50 text-red-700 font-bold text-sm flex items-center gap-2"
-                >
-                  <Activity className="w-4 h-4" />
-                  <span>Open My Patient Portal</span>
-                </button>
-                <button
-                  onClick={() => { setCurrentView('donors'); setMobileMenuOpen(false); }}
-                  className="w-full text-left py-2.5 px-4 rounded-xl text-gray-700 hover:bg-red-50 hover:text-red-600 font-medium text-sm flex items-center gap-2"
-                >
-                  <Users className="w-4 h-4 text-emerald-600" />
-                  <span>Find Available Donors</span>
-                </button>
-                <button
-                  onClick={() => { onOpenSos?.(); setMobileMenuOpen(false); }}
-                  className="w-full text-left py-2.5 px-4 rounded-xl bg-red-50 text-red-700 font-bold text-xs flex items-center gap-2 border border-red-200"
-                >
-                  <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
-                  <span>🚨 10-Second Quick SOS Request</span>
-                </button>
-              </>
-            )}
-
-            {/* Mobile Guest Navigation */}
-            {!currentUser && (
-              <>
-                <button
-                  onClick={() => { setCurrentView('emergency'); setMobileMenuOpen(false); }}
-                  className="w-full text-left py-2.5 px-4 rounded-xl text-gray-700 hover:bg-red-50 hover:text-red-600 font-medium text-sm flex items-center gap-2"
-                >
-                  <AlertTriangle className="w-4 h-4 text-red-600" />
-                  <span>Emergency Requests</span>
-                </button>
-                <button
-                  onClick={() => { onOpenSos?.(); setMobileMenuOpen(false); }}
-                  className="w-full text-left py-2.5 px-4 rounded-xl bg-red-50 text-red-700 font-bold text-xs flex items-center gap-2 border border-red-200"
-                >
-                  <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
-                  <span>🚨 10-Second Quick SOS Request</span>
-                </button>
-                <button
-                  onClick={() => { setCurrentView('donors'); setMobileMenuOpen(false); }}
-                  className="w-full text-left py-2.5 px-4 rounded-xl text-gray-700 hover:bg-red-50 hover:text-red-600 font-medium text-sm"
-                >
-                  Find Donors
-                </button>
-              </>
-            )}
-
-            <button
-              onClick={() => { setCurrentView('contact'); setMobileMenuOpen(false); }}
-              className="w-full text-left py-2.5 px-4 rounded-xl text-gray-700 hover:bg-red-50 hover:text-red-600 font-medium text-sm"
-            >
-              Contact Us
-            </button>
-
-            {currentUser ? (
-              <div className="pt-2 flex flex-col gap-2 border-t border-gray-100 mt-2">
-                <div className="py-2.5 px-4 rounded-xl bg-slate-50 border border-gray-200 flex justify-between items-center text-xs">
-                  <div>
-                    <span className="font-bold text-gray-900 block">{currentUser.name}</span>
-                    <span className={`text-[10px] font-bold uppercase ${isDonor ? 'text-emerald-700' : 'text-red-600'}`}>
-                      {currentUser.userType} ({currentUser.bloodGroup || 'Ready'})
-                    </span>
-                  </div>
-                  <button 
-                    onClick={() => { onLogout(); setMobileMenuOpen(false); }}
-                    className="text-red-600 font-bold hover:underline cursor-pointer"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="pt-2 flex flex-col gap-2 border-t border-gray-100 mt-2">
-                <button 
-                  onClick={() => { setCurrentView('login'); setMobileMenuOpen(false); }}
-                  className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-gray-700 font-medium flex items-center justify-center gap-1.5 cursor-pointer text-sm"
-                >
-                  <LogIn className="w-4 h-4" />
-                  <span>Login</span>
-                </button>
-                <button 
-                  onClick={() => { setCurrentView('register'); setMobileMenuOpen(false); }}
-                  className="w-full btn-medical text-white py-2.5 px-4 rounded-xl font-medium shadow-medical flex items-center justify-center gap-2 cursor-pointer text-sm"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  <span>Register</span>
-                </button>
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </nav>
   );
