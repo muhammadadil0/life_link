@@ -29,6 +29,21 @@ const CITY_COORDINATES = {
 
 const DEFAULT_CENTER = [34.3855, 71.8953]; // Shergarh, Mardan HQ
 
+const TILE_LAYERS = {
+  streets: {
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    subdomains: ['a', 'b', 'c'],
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  },
+  satellite: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    subdomains: [],
+    maxZoom: 19,
+    attribution: '&copy; Esri World Imagery'
+  }
+};
+
 export default function LiveDonorMap({ 
   donors = [], 
   selectedCity = '', 
@@ -38,8 +53,10 @@ export default function LiveDonorMap({
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersLayerRef = useRef(null);
+  const tileLayerRef = useRef(null);
   const [selectedDonor, setSelectedDonor] = useState(null);
   const [activeCityName, setActiveCityName] = useState('Shergarh & Mardan');
+  const [mapLayer, setMapLayer] = useState('streets'); // 'streets' | 'satellite'
 
   // Compute donor coordinates with deterministic jitter
   const getDonorCoords = (donor, index) => {
@@ -150,17 +167,26 @@ export default function LiveDonorMap({
         attributionControl: false
       });
 
-      // CartoDB Positron / OpenStreetMap Clean Layer
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        subdomains: 'abcd'
+      // Default to Authentic OpenStreetMap (Zero watermarks, 100% free)
+      const streetConfig = TILE_LAYERS.streets;
+      const initialTileLayer = L.tileLayer(streetConfig.url, {
+        maxZoom: streetConfig.maxZoom,
+        subdomains: streetConfig.subdomains,
+        attribution: streetConfig.attribution
       }).addTo(map);
+
+      tileLayerRef.current = initialTileLayer;
 
       // Custom Zoom Control at Top Right
       L.control.zoom({ position: 'topright' }).addTo(map);
 
       markersLayerRef.current = L.layerGroup().addTo(map);
       mapInstanceRef.current = map;
+
+      // Invalidate size to ensure full tile coverage
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 200);
     }
 
     return () => {
@@ -170,6 +196,29 @@ export default function LiveDonorMap({
       }
     };
   }, []);
+
+  // Switch Tile Layer between Streets and Satellite
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    if (tileLayerRef.current) {
+      map.removeLayer(tileLayerRef.current);
+    }
+
+    const config = TILE_LAYERS[mapLayer] || TILE_LAYERS.streets;
+    const newLayer = L.tileLayer(config.url, {
+      maxZoom: config.maxZoom,
+      subdomains: config.subdomains.length ? config.subdomains : undefined,
+      attribution: config.attribution
+    }).addTo(map);
+
+    tileLayerRef.current = newLayer;
+
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 150);
+  }, [mapLayer]);
 
   // Update Markers when donors or selectedCity change
   useEffect(() => {
@@ -290,14 +339,41 @@ export default function LiveDonorMap({
         </div>
       </div>
 
-      {/* 🎯 Recenter / GPS Button */}
-      <button
-        onClick={handleLocateMe}
-        className="absolute top-4 right-4 z-[400] w-10 h-10 rounded-2xl bg-white hover:bg-gray-50 text-gray-700 flex items-center justify-center shadow-lg border border-gray-200 transition-all cursor-pointer"
-        title="Recenter Map"
-      >
-        <Crosshair className="w-5 h-5 text-red-600" />
-      </button>
+      {/* 🎯 Top Right Controls: Streets/Satellite Layer Switcher & GPS Recenter */}
+      <div className="absolute top-4 right-4 z-[400] flex items-center gap-2 pointer-events-auto">
+        <div className="hidden sm:flex items-center gap-1 bg-white/95 backdrop-blur-md p-1 rounded-2xl shadow-lg border border-gray-200">
+          <button
+            type="button"
+            onClick={() => setMapLayer('streets')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              mapLayer === 'streets' 
+                ? 'bg-red-600 text-white shadow-xs' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            🗺️ Streets
+          </button>
+          <button
+            type="button"
+            onClick={() => setMapLayer('satellite')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              mapLayer === 'satellite' 
+                ? 'bg-red-600 text-white shadow-xs' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            🛰️ Satellite
+          </button>
+        </div>
+
+        <button
+          onClick={handleLocateMe}
+          className="w-10 h-10 rounded-2xl bg-white hover:bg-gray-50 text-gray-700 flex items-center justify-center shadow-lg border border-gray-200 transition-all cursor-pointer"
+          title="Recenter Map"
+        >
+          <Crosshair className="w-5 h-5 text-red-600" />
+        </button>
+      </div>
 
       {/* 🗺️ Leaflet Container */}
       <div 
