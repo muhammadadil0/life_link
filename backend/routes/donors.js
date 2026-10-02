@@ -31,6 +31,8 @@ router.get('/', async (req, res) => {
         age: d.age || 30,
         is_available: d.isAvailable,
         total_donations: d.totalDonations || 0,
+        latitude: d.latitude || null,
+        longitude: d.longitude || null,
         source: 'mongodb'
       }));
 

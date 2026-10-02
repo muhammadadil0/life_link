@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Heart, AlertTriangle, Users, Phone, MapPin, MessageCircle, 
-  CheckCircle2, Plus, Search, Filter, Navigation, X, Send, ArrowRight, Droplets, Sparkles
+  CheckCircle2, Plus, Search, Filter, Navigation, X, Send, ArrowRight, Droplets, Sparkles, Map, LayoutGrid
 } from 'lucide-react';
 import { fetchDonors, createEmergencyRequest } from '../services/api';
+import LiveDonorMap from '../components/LiveDonorMap';
 
 export default function PatientDashboard({ currentUser, onNavigateHome }) {
   const [donors, setDonors] = useState([]);
   const [loadingDonors, setLoadingDonors] = useState(true);
   const [filterGroup, setFilterGroup] = useState('all');
   const [filterCity, setFilterCity] = useState('');
+  const [viewMode, setViewMode] = useState('map');
   
   // Emergency Request Modal
   const [showRequestModal, setShowRequestModal] = useState(false);
@@ -242,7 +244,7 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
         </div>
 
         {/* Blood Group Filter Bar */}
-        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-8">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6">
           {bloodGroups.map((bg) => (
             <button
               key={bg}
@@ -257,6 +259,60 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
             </button>
           ))}
         </div>
+
+        {/* View Switcher: Live Radar Map vs Directory Grid */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <div className="inline-flex p-1 bg-slate-100/90 rounded-2xl border border-gray-200 shadow-inner">
+            <button
+              type="button"
+              onClick={() => setViewMode('map')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                viewMode === 'map'
+                  ? 'bg-white text-red-600 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <Map className="w-4 h-4" />
+              <span>🗺️ Live Donor Radar Map</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                viewMode === 'grid'
+                  ? 'bg-white text-red-600 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+              <span>📋 List Grid ({donors.length})</span>
+            </button>
+          </div>
+
+          <div className="text-xs text-gray-500 font-medium">
+            {viewMode === 'map' ? (
+              <span className="inline-flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                <span>Tap any circular donor pin to connect or chat</span>
+              </span>
+            ) : (
+              <span>Showing {donors.length} nearby donors</span>
+            )}
+          </div>
+        </div>
+
+        {/* 🗺️ Live Radar Map View */}
+        {viewMode === 'map' && (
+          <div className="mb-10 animate-fade-in">
+            <LiveDonorMap 
+              donors={donors} 
+              selectedCity={filterCity} 
+              onOpenChat={openChatWithDonor} 
+              height="520px" 
+            />
+          </div>
+        )}
 
         {/* Donors Cards Grid */}
         {loadingDonors ? (

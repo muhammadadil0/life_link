@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Users, Droplets, MapPin, Phone, MessageCircle, Navigation, 
-  Search, Filter, CheckCircle2, Heart, X, Send, Sparkles 
+  Search, Filter, CheckCircle2, Heart, X, Send, Sparkles, Map, LayoutGrid
 } from 'lucide-react';
 import { fetchDonors } from '../services/api';
+import LiveDonorMap from '../components/LiveDonorMap';
 
 export default function DonorsPage({ currentUser, onNavigateRegister, onNavigateDonorPortal }) {
   const [donors, setDonors] = useState([]);
@@ -11,6 +12,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
   const [selectedBlood, setSelectedBlood] = useState('all');
   const [searchCity, setSearchCity] = useState('');
   const [availableOnly, setAvailableOnly] = useState(true);
+  const [viewMode, setViewMode] = useState('map');
 
   // Chat modal
   const [chatModal, setChatModal] = useState({ open: false, donor: null, messages: [] });
@@ -201,22 +203,87 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
             </form>
           </div>
         </div>
+
+        {/* View Switcher: Live Radar Map vs Directory Grid */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
+          <div className="inline-flex p-1 bg-slate-100/90 rounded-2xl border border-gray-200 shadow-inner">
+            <button
+              type="button"
+              onClick={() => setViewMode('map')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                viewMode === 'map'
+                  ? 'bg-white text-red-600 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <Map className="w-4 h-4" />
+              <span>🗺️ Live Donor Radar Map</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                viewMode === 'grid'
+                  ? 'bg-white text-red-600 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+              <span>📋 Directory Cards ({donors.length})</span>
+            </button>
+          </div>
+
+          <div className="text-xs text-gray-500 font-medium">
+            {viewMode === 'map' ? (
+              <span className="inline-flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                <span>Tap any circular donor pin on the map to call or chat</span>
+              </span>
+            ) : (
+              <span>Showing {donors.length} registered donors</span>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* 👥 Donors Grid */}
-      {loading ? (
-        <div className="text-center py-16">
-          <div className="w-8 h-8 border-3 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-gray-500 text-sm">Searching donors...</p>
+      {/* 🗺️ Live Radar Map View */}
+      {viewMode === 'map' && (
+        <div className="mb-12 animate-fade-in">
+          <LiveDonorMap 
+            donors={donors} 
+            selectedCity={searchCity} 
+            onOpenChat={openChatWithDonor} 
+            height="580px" 
+          />
         </div>
-      ) : donors.length === 0 ? (
-        <div className="glass-card bg-white p-12 text-center rounded-3xl border border-gray-200">
-          <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-gray-800">No Donors Matching Your Filter</h3>
-          <p className="text-gray-500 text-xs mt-1">Try selecting another blood group or clearing the city search.</p>
+      )}
+
+      {/* 👥 Donors Grid Section */}
+      <section className="mb-16">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold font-display text-gray-900 flex items-center gap-2">
+            <Users className="w-5 h-5 text-red-600" />
+            <span>{viewMode === 'map' ? 'All Verified Donors in This Region' : 'Verified Donors Directory'}</span>
+          </h2>
+          <span className="text-xs text-gray-500">
+            {donors.length} active lifesavers
+          </span>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+
+        {loading ? (
+          <div className="text-center py-16">
+            <div className="w-8 h-8 border-3 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-gray-500 text-sm">Searching donors...</p>
+          </div>
+        ) : donors.length === 0 ? (
+          <div className="glass-card bg-white p-12 text-center rounded-3xl border border-gray-200">
+            <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-gray-800">No Donors Matching Your Filter</h3>
+            <p className="text-gray-500 text-xs mt-1">Try selecting another blood group or clearing the city search.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {donors.map((donor) => (
             <div
               key={donor.id}
@@ -305,6 +372,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
           ))}
         </div>
       )}
+      </section>
 
       {/* 💬 Real-Time Chat Modal with Donor */}
       {chatModal.open && (
