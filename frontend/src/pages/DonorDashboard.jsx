@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Heart, Droplets, MapPin, Phone, AlertCircle, 
   CheckCircle2, Clock, Shield, User, ArrowRight, 
-  Activity, Calendar, Award, Check, Sparkles, Plus, ExternalLink, Mail
+  Activity, Calendar, Award, Check, Sparkles, Plus, ExternalLink, Mail, BookOpen
 } from 'lucide-react';
 import { updateUserProfile } from '../services/api';
 
@@ -16,6 +16,53 @@ const COMPATIBILITY_MAP = {
   'O+': { canDonateTo: ['O+', 'A+', 'B+', 'AB+'], canReceiveFrom: ['O+', 'O-'], label: 'Most Common & Needed' },
   'O-': { canDonateTo: ['All Blood Types (Universal Donor)'], canReceiveFrom: ['O- only'], label: 'Universal Emergency Lifesaver' }
 };
+
+const DONOR_HADITHS = [
+  {
+    id: 1,
+    title: "Relieving a Believer's Hardship",
+    theme: "Divine Relief on the Day of Judgment",
+    arabic: "مَنْ نَفَّسَ عَنْ مُؤْمِنٍ كُرْبَةً مِنْ كُرَبِ الدُّنْيَا، نَفَّسَ اللهُ عَنْهُ كُرْبَةً مِنْ كُرَبِ يَوْمِ الْقِيَامَةِ، وَمَنْ يَسَّرَ عَلَى مُعْسِرٍ، يَسَّرَ اللهُ عَلَيْهِ فِي الدُّنْيَا وَالْآخِرَةِ، وَاللهُ فِي عَوْنِ الْعَبْدِ مَا كَانَ الْعَبْدُ فِي عَوْنِ أَخِيهِ",
+    urdu: "جو شخص کسی مومن کی دنیاوی تکلیفوں میں سے کوئی تکلیف دور کرے گا، اللہ قیامت کے دن اس کی تکلیفوں میں سے ایک بڑی تکلیف دور فرمائے گا، اور اللہ اپنے بندے کی مدد میں رہتا ہے جب تک بندہ اپنے بھائی کی مدد میں لگا رہتا ہے۔",
+    english: "Whoever relieves a believer of a distress from the distresses of this world, Allah will relieve him of a distress from the distresses of the Day of Resurrection... And Allah remains in aid of His servant as long as the servant remains in aid of his brother.",
+    source: "Sahih Muslim 2699",
+    grade: "صحیح مسلم — Sahih",
+    donorTakeaway: "Donating your blood frees a critical patient from intense agony, ensuring Allah's direct divine assistance for you when you need it most."
+  },
+  {
+    id: 2,
+    title: "The Most Beloved People to Allah",
+    theme: "Greatest Benefit to Humanity",
+    arabic: "أَحَبُّ النَّاسِ إِلَى اللَّهِ أَنْفَعُهُمْ لِلنَّاسِ، وَأَحَبُّ الْأَعْمَالِ إِلَى اللَّهِ سُرُورٌ تُدْخِلُهُ عَلَى مُسْلِمٍ، أَوْ تَكْشِفُ عَنْهُ كُرْبَةً",
+    urdu: "اللہ تعالیٰ کے نزدیک تمام لوگوں میں سب سے زیادہ محبوب وہ انسان ہے جو لوگوں کو سب سے زیادہ فائدہ پہنچائے، اور سب سے پسندیدہ عمل یہ ہے کہ تم کسی مسلمان کے دل میں خوشی داخل کرو یا اس کی کوئی پریشانی دور کرو۔",
+    english: "The most beloved of people to Allah are those who bring greatest benefit to people. And the most beloved deed to Allah is to bring happiness to a fellow human, or to remove a distress from them.",
+    source: "Al-Mu'jam Al-Awsat (Tabarani 6026) • Sahih Al-Jami' 176",
+    grade: "حدیث صحیح — Sahih / Hasan",
+    donorTakeaway: "Your selfless blood donation turns tears of anguish into tears of relief for suffering families, elevating you among the beloved servants of Allah."
+  },
+  {
+    id: 3,
+    title: "Saving One Life Equals All Humanity",
+    theme: "Supreme Sanctity of Human Life",
+    arabic: "وَمَنْ أَحْيَاهَا فَكَأَنَّمَا أَحْيَا النَّاسَ جَمِيعًا",
+    urdu: "اور جس نے کسی ایک انسان کی جان بچائی، گویا اس نے تمام انسانوں کی جان بچا لی۔",
+    english: "And whoever saves one life, it is as if he had saved the whole of humanity.",
+    source: "Al-Qur'an — Surah Al-Ma'idah (5:32)",
+    grade: "قرآن مجید — Surah 5:32",
+    donorTakeaway: "A 15-minute blood donation can restart a patient's failing heart, earning you the immense reward of preserving all human lives on earth."
+  },
+  {
+    id: 4,
+    title: "Continuous Bodily Charity (Sadaqah)",
+    theme: "Charity of Good Health & Physical Strength",
+    arabic: "كُلُّ مَعْرُوفٍ صَدَقَةٌ",
+    urdu: "ہر نیکی اور بھلائی کا کام صدقہ ہے، اور اچھی صحت میں ضرورت مند کو خون دینا ایک عظیم جسمانی صدقہ اور صدقۂ جاریہ ہے۔",
+    english: "Every act of goodness is an ongoing charity (Sadaqah). Donating blood without monetary return is one of the purest forms of voluntary bodily charity.",
+    source: "Sahih Al-Bukhari 6021 • Sahih Muslim 1005",
+    grade: "متفق علیہ — Agreed Upon",
+    donorTakeaway: "You do not need wealth to give noble charity; giving the gift of life from the good health Allah blessed you with is supreme, ongoing Sadaqah."
+  }
+];
 
 export default function DonorDashboard({ currentUser, onNavigateHome, onNavigateEmergency }) {
   const donorData = currentUser || {
@@ -270,6 +317,91 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
           <div className="text-[11px] text-gray-400 mt-1">Shergarh, Mardan HQ</div>
         </div>
       </div>
+
+      {/* 📖 Virtues of Saving Lives & Authentic Hadiths for Donors */}
+      <section className="glass-card bg-gradient-to-br from-amber-50/70 via-white to-red-50/50 rounded-3xl p-6 sm:p-10 border border-amber-200 shadow-md relative overflow-hidden">
+        {/* Subtle Calligraphy Watermark */}
+        <div className="absolute -top-4 -right-4 text-red-900/5 text-9xl font-urdu select-none pointer-events-none">
+          ﷺ
+        </div>
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-900 px-3.5 py-1 rounded-full text-xs font-bold mb-2.5">
+              <Sparkles className="w-3.5 h-3.5 fill-amber-600 text-amber-600" />
+              <span>فضائل و برکات • Spiritual Virtues of Blood Donation</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold font-display text-gray-900">
+              The Divine Honor of Donating Blood in Islam
+            </h2>
+            <p className="text-gray-600 text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
+              Donating a portion of your healthy blood to save a fellow human in critical distress is one of the highest acts of voluntary physical charity (صدقۂ جاریہ) and a direct means of earning Allah's mercy.
+            </p>
+          </div>
+
+          <div className="hidden lg:flex items-center gap-2 text-xs font-bold text-amber-900 bg-amber-100/80 border border-amber-300 px-4 py-2 rounded-2xl shadow-xs">
+            <BookOpen className="w-4 h-4 text-amber-700" />
+            <span>صحیح احادیث مبارکہ (Authentic References)</span>
+          </div>
+        </div>
+
+        {/* 2x2 Grid of Authentic Hadiths */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+          {DONOR_HADITHS.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white/95 backdrop-blur-xs rounded-2xl p-6 sm:p-7 border border-amber-200/70 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between group"
+            >
+              <div>
+                {/* Header Tag & Hadith Grade */}
+                <div className="flex items-center justify-between gap-2 mb-3.5">
+                  <span className="text-[11px] font-bold text-red-700 bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg uppercase tracking-wide">
+                    {item.theme}
+                  </span>
+                  <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+                    {item.grade}
+                  </span>
+                </div>
+
+                {/* Arabic Text */}
+                <div 
+                  className="bg-amber-50/50 border-r-4 border-r-amber-500 rounded-xl p-4 my-3 text-right text-gray-900 font-serif text-base sm:text-lg leading-loose select-text shadow-inner" 
+                  dir="rtl"
+                >
+                  «{item.arabic}»
+                </div>
+
+                {/* Urdu Translation */}
+                <p 
+                  className="text-right text-gray-800 text-sm font-urdu leading-loose my-2.5 select-text" 
+                  dir="rtl"
+                >
+                  "{item.urdu}"
+                </p>
+
+                {/* English Translation */}
+                <blockquote className="text-xs sm:text-sm italic text-gray-600 mt-2.5 pl-3 border-l-2 border-red-400 leading-relaxed">
+                  "{item.english}"
+                </blockquote>
+
+                <div className="text-right text-[11px] font-bold text-gray-400 mt-2 tracking-wider">
+                  — {item.source}
+                </div>
+              </div>
+
+              {/* Donor Motivational Connection */}
+              <div className="mt-5 pt-3 border-t border-amber-100 bg-gradient-to-r from-red-50/80 to-amber-50/40 -mx-6 sm:-mx-7 -mb-6 sm:-mb-7 p-4 sm:p-5 rounded-b-2xl">
+                <div className="flex items-start gap-2.5">
+                  <Heart className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5 fill-red-600 group-hover:scale-110 transition-transform" />
+                  <p className="text-xs text-gray-700 font-medium leading-relaxed">
+                    <strong className="text-red-700">Motivation for Donors:</strong> {item.donorTakeaway}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* 🧪 Section 2: Blood Compatibility Matrix & Impact */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
