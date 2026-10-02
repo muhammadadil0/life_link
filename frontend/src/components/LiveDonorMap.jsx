@@ -38,7 +38,7 @@ const TILE_LAYERS = {
   },
   satellite: {
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    subdomains: [],
+    subdomains: ['a', 'b', 'c'],
     maxZoom: 19,
     attribution: '&copy; Esri World Imagery'
   }
@@ -208,9 +208,9 @@ export default function LiveDonorMap({
 
     const config = TILE_LAYERS[mapLayer] || TILE_LAYERS.streets;
     const newLayer = L.tileLayer(config.url, {
-      maxZoom: config.maxZoom,
-      subdomains: config.subdomains.length ? config.subdomains : undefined,
-      attribution: config.attribution
+      maxZoom: config.maxZoom || 19,
+      subdomains: config.subdomains || ['a', 'b', 'c'],
+      attribution: config.attribution || ''
     }).addTo(map);
 
     tileLayerRef.current = newLayer;
