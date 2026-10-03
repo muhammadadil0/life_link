@@ -1,7 +1,9 @@
 import React from 'react';
-import { Heart, AlertTriangle, Users, LogIn, UserPlus, Sparkles, Activity } from 'lucide-react';
+import { Heart, AlertTriangle, Users, LogIn, UserPlus, Sparkles, Activity, Globe } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Navbar({ currentView, setCurrentView, currentUser, onLogout, onOpenSos }) {
+  const { language, toggleLanguage, isUrdu, t } = useLanguage();
 
   const isDonor = currentUser && currentUser.userType === 'donor';
   const isPatient = currentUser && currentUser.userType === 'patient';
@@ -32,7 +34,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                 LifeLink
               </span>
               <div className="text-[10px] sm:text-xs text-gray-500 font-medium tracking-wider uppercase">
-                {isDonor ? 'Donor Network' : isPatient ? 'Patient Care' : 'Medical Network'}
+                {isDonor ? t('brand_donor_sub') : isPatient ? t('brand_patient_sub') : t('brand_sub')}
               </div>
             </div>
           </button>
@@ -50,7 +52,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                   : 'text-gray-700 hover:text-red-600 hover:bg-red-50/50'
               }`}
             >
-              Home
+              {t('nav_home')}
             </button>
 
             {/* --- 🩸 DONOR PERSONA NAVIGATION --- */}
@@ -65,7 +67,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                   }`}
                 >
                   <Heart className="w-4 h-4 fill-current" />
-                  <span>My Donor Portal</span>
+                  <span>{t('nav_donor_portal')}</span>
                 </button>
 
                 <button
@@ -78,7 +80,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                   title="View patients in hospital emergencies who need your blood"
                 >
                   <AlertTriangle className="w-4 h-4 text-red-600" />
-                  <span>Patients In Need</span>
+                  <span>{t('nav_patients_need')}</span>
                 </button>
               </>
             )}
@@ -95,7 +97,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                   }`}
                 >
                   <Activity className="w-4 h-4" />
-                  <span>My Patient Portal</span>
+                  <span>{t('nav_patient_portal')}</span>
                 </button>
 
                 <button
@@ -107,7 +109,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                   }`}
                 >
                   <Users className="w-4 h-4 text-emerald-600" />
-                  <span>Find Donors</span>
+                  <span>{t('nav_find_donors')}</span>
                 </button>
 
                 {/* 🚨 Quick SOS Blood Button for Patients */}
@@ -120,7 +122,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
                   </span>
-                  <span>10s SOS Blood</span>
+                  <span>{t('nav_sos_btn')}</span>
                 </button>
               </>
             )}
@@ -137,7 +139,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                   }`}
                 >
                   <AlertTriangle className="w-4 h-4 text-red-600" />
-                  <span>Emergency</span>
+                  <span>{t('nav_emergency')}</span>
                 </button>
 
                 {/* 🚨 10-Second Quick SOS Blood Button */}
@@ -150,7 +152,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
                   </span>
-                  <span>10s SOS Blood</span>
+                  <span>{t('nav_sos_btn')}</span>
                 </button>
 
                 <button
@@ -161,7 +163,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                       : 'text-gray-700 hover:text-red-600 hover:bg-red-50/50'
                   }`}
                 >
-                  Find Donors
+                  {t('nav_find_donors')}
                 </button>
               </>
             )}
@@ -175,10 +177,20 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                   : 'text-gray-700 hover:text-red-600 hover:bg-red-50/50'
               }`}
             >
-              Contact
+              {t('nav_contact')}
             </button>
 
             <div className="h-6 w-px bg-gray-200 mx-1" />
+
+            {/* 🌐 Desktop Language Switcher */}
+            <button
+              onClick={toggleLanguage}
+              className="px-3 py-1.5 rounded-xl text-xs font-bold border border-gray-200 bg-white hover:bg-slate-50 text-gray-800 flex items-center gap-1.5 transition-all shadow-xs cursor-pointer hover:border-red-300"
+              title={isUrdu ? "Switch to English" : "اردو میں دیکھیں"}
+            >
+              <Globe className="w-3.5 h-3.5 text-red-600" />
+              <span>{isUrdu ? 'English' : 'اردو'}</span>
+            </button>
 
             {/* Profile Pill & Role Indicator */}
             {currentUser ? (
@@ -188,7 +200,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                     onClick={() => setCurrentView('admin')}
                     className="px-3.5 py-2 rounded-xl text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 transition-all cursor-pointer"
                   >
-                    Admin Console
+                    {t('nav_admin')}
                   </button>
                 )}
 
@@ -222,7 +234,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                     className="ml-1 text-[11px] text-gray-400 hover:text-red-600 font-medium cursor-pointer transition-colors"
                     title="Sign Out"
                   >
-                    Logout
+                    {t('nav_signout')}
                   </button>
                 </div>
               </div>
@@ -237,7 +249,7 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                   }`}
                 >
                   <LogIn className="w-4 h-4 mr-1.5" />
-                  Login
+                  <span>{t('nav_login')}</span>
                 </button>
                 <button 
                   onClick={() => setCurrentView('register')}
@@ -248,28 +260,39 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                   }`}
                 >
                   <UserPlus className="w-4 h-4 mr-1.5" />
-                  Register
+                  <span>{t('nav_register')}</span>
                 </button>
               </>
             )}
           </div>
 
-          {/* Mobile Right Element: Compact User Badge & Sign Out when logged in (No hamburger menu) */}
-          {currentUser && (
-            <div className="flex md:hidden items-center gap-2">
-              <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold text-white shadow-xs ${
-                isDonor ? 'bg-emerald-600' : 'bg-red-600'
-              }`}>
-                {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+          {/* Mobile Right Element: Language Switcher & Compact User Badge/Sign Out */}
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              onClick={toggleLanguage}
+              className="px-2.5 py-1 rounded-xl text-xs font-bold border border-gray-200 bg-white hover:bg-slate-50 text-gray-800 flex items-center gap-1 shadow-xs cursor-pointer"
+              title={isUrdu ? "Switch to English" : "اردو میں دیکھیں"}
+            >
+              <Globe className="w-3.5 h-3.5 text-red-600" />
+              <span>{isUrdu ? 'EN' : 'اردو'}</span>
+            </button>
+
+            {currentUser && (
+              <div className="flex items-center gap-1.5">
+                <div className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs font-bold text-white shadow-xs ${
+                  isDonor ? 'bg-emerald-600' : 'bg-red-600'
+                }`}>
+                  {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+                </div>
+                <button
+                  onClick={onLogout}
+                  className="text-xs text-red-600 font-bold px-2 py-1 rounded-lg bg-red-50 hover:bg-red-100 transition-all cursor-pointer"
+                >
+                  {t('nav_signout')}
+                </button>
               </div>
-              <button
-                onClick={onLogout}
-                className="text-xs text-red-600 font-bold px-2.5 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 transition-all cursor-pointer"
-              >
-                Sign Out
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </nav>

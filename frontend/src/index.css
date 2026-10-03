@@ -21,6 +21,15 @@ body {
   font-family: 'Noto Nastaliq Urdu', serif;
 }
 
+body.lang-urdu {
+  font-family: 'Noto Nastaliq Urdu', 'Inter', system-ui, sans-serif;
+  line-height: 1.8;
+}
+
+body.lang-urdu .font-display {
+  font-family: 'Noto Nastaliq Urdu', 'Poppins', sans-serif;
+}
+
 /* Enhanced Animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px) rotate(0deg); }

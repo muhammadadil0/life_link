@@ -1,17 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { 
   AlertTriangle, Droplets, MapPin, Phone, MessageCircle, 
-  Navigation, Plus, Search, Filter, CheckCircle2, Clock, X, Send, Heart 
+  Navigation, Plus, Search, Filter, CheckCircle2, Clock, X, Send, Heart, Share2 
 } from 'lucide-react';
 import { fetchEmergencyRequests, createEmergencyRequest } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateDonorPortal }) {
+  const { t, isUrdu } = useLanguage();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterBlood, setFilterBlood] = useState('all');
   const [searchCity, setSearchCity] = useState('');
   
   const isDonor = currentUser && currentUser.userType === 'donor';
+
+  const handleWhatsAppBroadcast = (req) => {
+    const text = `${t('wa_sos_header')}\n\n` +
+      `${t('wa_patient')} ${req.patient_name}\n` +
+      `${t('wa_blood_needed')} ${req.blood_type}\n` +
+      `${t('wa_units')} ${req.units_needed}\n` +
+      `${t('wa_hospital')} ${req.hospital}, ${req.city}\n` +
+      `${t('wa_contact')} ${req.contact || '03494996898'}\n\n` +
+      `${t('wa_respond_link')}\n${window.location.origin}\n\n` +
+      `${t('wa_footer')}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  };
   
   // Post Emergency Modal
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -306,7 +320,7 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
                   className="py-2.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-gray-800 text-xs font-semibold flex items-center justify-center gap-1 transition-colors"
                 >
                   <Phone className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Call</span>
+                  <span>{t('btn_call_now', 'Call')}</span>
                 </a>
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(req.hospital + ' ' + req.city)}`}
@@ -315,16 +329,26 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
                   className="py-2.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-gray-800 text-xs font-semibold flex items-center justify-center gap-1 transition-colors"
                 >
                   <Navigation className="w-3.5 h-3.5 text-blue-600" />
-                  <span>Map</span>
+                  <span>{t('btn_directions', 'Map')}</span>
                 </a>
                 <button
                   onClick={() => openChat(req)}
                   className="btn-medical text-white py-2.5 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-medical cursor-pointer"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />
-                  <span>Chat</span>
+                  <span>{t('btn_chat', 'Chat')}</span>
                 </button>
               </div>
+
+              {/* 1-Click WhatsApp Emergency Broadcast */}
+              <button
+                onClick={() => handleWhatsAppBroadcast(req)}
+                className="mt-2.5 w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+                title="Broadcast this urgent blood request instantly to WhatsApp contacts and groups"
+              >
+                <Share2 className="w-4 h-4" />
+                <span>{t('btn_broadcast_whatsapp', 'Broadcast on WhatsApp')}</span>
+              </button>
             </div>
           ))}
         </div>

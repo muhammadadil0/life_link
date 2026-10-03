@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { 
   AlertTriangle, Droplets, MapPin, Phone, CheckCircle2, 
-  X, Send, ArrowRight, HeartPulse, Sparkles, Navigation 
+  X, Send, ArrowRight, HeartPulse, Sparkles, Navigation, Share2 
 } from 'lucide-react';
 import { createEmergencyRequest } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
+  const { t, isUrdu } = useLanguage();
   const [bloodType, setBloodType] = useState('O-');
   const [unitsNeeded, setUnitsNeeded] = useState(2);
   const [urgency, setUrgency] = useState('Immediate (ICU/Surgery)');
@@ -98,6 +100,24 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
             </div>
 
             <div className="space-y-2.5">
+              <button
+                onClick={() => {
+                  const text = `${t('wa_sos_header')}\n\n` +
+                    `${t('wa_patient')} ${successData.patient_name || 'Emergency Patient'}\n` +
+                    `${t('wa_blood_needed')} ${successData.blood_type}\n` +
+                    `${t('wa_units')} ${successData.units_needed}\n` +
+                    `${t('wa_hospital')} ${successData.hospital}, ${successData.city}\n` +
+                    `${t('wa_contact')} ${successData.contact}\n\n` +
+                    `${t('wa_respond_link')}\n${window.location.origin}\n\n` +
+                    `${t('wa_footer')}`;
+                  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                }}
+                className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 cursor-pointer transition-all"
+              >
+                <Share2 className="w-4 h-4" />
+                <span>{t('btn_broadcast_whatsapp', 'Broadcast on WhatsApp')}</span>
+              </button>
+
               <button
                 onClick={() => {
                   onClose();

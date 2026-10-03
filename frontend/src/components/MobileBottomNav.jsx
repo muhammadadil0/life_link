@@ -1,7 +1,9 @@
 import React from 'react';
 import { Home, Users, AlertTriangle, Heart, Activity, Droplets, LogIn, PhoneCall } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function MobileBottomNav({ currentView, setCurrentView, currentUser, onOpenSos }) {
+  const { t } = useLanguage();
   const isDonor = currentUser && currentUser.userType === 'donor';
   const isPatient = currentUser && currentUser.userType === 'patient';
 
@@ -9,31 +11,31 @@ export default function MobileBottomNav({ currentView, setCurrentView, currentUs
   const getTabs = () => {
     if (isDonor) {
       return [
-        { id: 'home', label: 'Home', icon: Home },
-        { id: 'emergency', label: 'Patients', icon: AlertTriangle },
+        { id: 'home', label: t('mob_home', 'Home'), icon: Home },
+        { id: 'emergency', label: t('mob_patients', 'Patients'), icon: AlertTriangle },
         // Center FAB handled separately
-        { id: 'donor_dashboard', label: 'My Portal', icon: Heart },
-        { id: 'contact', label: 'Support', icon: PhoneCall },
+        { id: 'donor_dashboard', label: t('mob_my_portal', 'My Portal'), icon: Heart },
+        { id: 'contact', label: t('mob_support', 'Support'), icon: PhoneCall },
       ];
     }
 
     if (isPatient) {
       return [
-        { id: 'home', label: 'Home', icon: Home },
-        { id: 'donors', label: 'Donors', icon: Users },
+        { id: 'home', label: t('mob_home', 'Home'), icon: Home },
+        { id: 'donors', label: t('mob_donors', 'Donors'), icon: Users },
         // Center FAB handled separately
-        { id: 'patient_dashboard', label: 'My Portal', icon: Activity },
-        { id: 'contact', label: 'Support', icon: PhoneCall },
+        { id: 'patient_dashboard', label: t('mob_my_portal', 'My Portal'), icon: Activity },
+        { id: 'contact', label: t('mob_support', 'Support'), icon: PhoneCall },
       ];
     }
 
     // Guest visitor tabs
     return [
-      { id: 'home', label: 'Home', icon: Home },
-      { id: 'donors', label: 'Donors', icon: Users },
+      { id: 'home', label: t('mob_home', 'Home'), icon: Home },
+      { id: 'donors', label: t('mob_donors', 'Donors'), icon: Users },
       // Center FAB handled separately
-      { id: 'emergency', label: 'Urgent', icon: AlertTriangle },
-      { id: 'login', label: 'Sign In', icon: LogIn },
+      { id: 'emergency', label: t('mob_urgent', 'Urgent'), icon: AlertTriangle },
+      { id: 'login', label: t('mob_signin', 'Sign In'), icon: LogIn },
     ];
   };
 
@@ -85,7 +87,7 @@ export default function MobileBottomNav({ currentView, setCurrentView, currentUs
             <Droplets className="w-6 h-6 fill-current relative z-10" />
           </button>
           <span className="text-[10px] font-black text-red-600 tracking-wider uppercase mt-1">
-            10s SOS
+            {t('mob_sos', '10s SOS')}
           </span>
         </div>
 
