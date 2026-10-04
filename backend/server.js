@@ -45,12 +45,39 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.listen(PORT, async () => {
-  console.log(`LifeLink Node.js API server running on http://localhost:${PORT}`);
-  
-  // Connect to MongoDB
-  const connected = await connectDB();
-  if (connected) {
-    await seedDatabase();
+// Auto-connect to database in serverless or standalone mode
+let isDbConnecting = false;
+const ensureDbConnection = async () => {
+  if (!isDbConnected() && process.env.MONGODB_URI && !isDbConnecting) {
+    isDbConnecting = true;
+    try {
+      const connected = await connectDB();
+      if (connected) {
+        await seedDatabase();
+      }
+    } catch (err) {
+      console.error('Failed to auto-connect database in middleware:', err);
+    } finally {
+      isDbConnecting = false;
+    }
   }
+};
+
+// Middleware for serverless request connection
+app.use(async (req, res, next) => {
+  await ensureDbConnection();
+  next();
 });
+
+// Standalone server mode (only when run directly via node backend/server.js)
+if (require.main === module && !process.env.VERCEL && !process.env.NOW_REGION) {
+  app.listen(PORT, async () => {
+    console.log(`LifeLink Node.js API server running on http://localhost:${PORT}`);
+    const connected = await connectDB();
+    if (connected) {
+      await seedDatabase();
+    }
+  });
+}
+
+module.exports = app;
