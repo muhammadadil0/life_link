@@ -5,6 +5,7 @@ import {
   Activity, Calendar, Award, Check, Sparkles, Plus, ExternalLink, Mail, BookOpen
 } from 'lucide-react';
 import { updateUserProfile } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 
 const COMPATIBILITY_MAP = {
   'A+': { canDonateTo: ['A+', 'AB+'], canReceiveFrom: ['A+', 'A-', 'O+', 'O-'], label: 'Vital Platelet & RBC Donor' },
@@ -27,7 +28,8 @@ const DONOR_HADITHS = [
     english: "Whoever relieves a believer of a distress from the distresses of this world, Allah will relieve him of a distress from the distresses of the Day of Resurrection... And Allah remains in aid of His servant as long as the servant remains in aid of his brother.",
     source: "Sahih Muslim 2699",
     grade: "صحیح مسلم — Sahih",
-    donorTakeaway: "Donating your blood frees a critical patient from intense agony, ensuring Allah's direct divine assistance for you when you need it most."
+    donorTakeaway: "Donating your blood frees a critical patient from intense agony, ensuring Allah's direct divine assistance for you when you need it most.",
+    donorTakeawayUrdu: "آپ کا خون کسی تکلیف میں مبتلا مریض کو نئی زندگی دیتا ہے، جس کے بدلے اللہ تعالیٰ قیامت کے دن آپ کی مشکل دور فرمائے گا۔"
   },
   {
     id: 2,
@@ -38,7 +40,8 @@ const DONOR_HADITHS = [
     english: "The most beloved of people to Allah are those who bring greatest benefit to people. And the most beloved deed to Allah is to bring happiness to a fellow human, or to remove a distress from them.",
     source: "Al-Mu'jam Al-Awsat (Tabarani 6026) • Sahih Al-Jami' 176",
     grade: "حدیث صحیح — Sahih / Hasan",
-    donorTakeaway: "Your selfless blood donation turns tears of anguish into tears of relief for suffering families, elevating you among the beloved servants of Allah."
+    donorTakeaway: "Your selfless blood donation turns tears of anguish into tears of relief for suffering families, elevating you among the beloved servants of Allah.",
+    donorTakeawayUrdu: "آپ کا بے لوث عطیہ پریشان کنبوں کے آنسوؤں کو مسکراہٹ میں بدل دیتا ہے، اور آپ کو اللہ کا محبوب بندہ بناتا ہے۔"
   },
   {
     id: 3,
@@ -49,7 +52,8 @@ const DONOR_HADITHS = [
     english: "And whoever saves one life, it is as if he had saved the whole of humanity.",
     source: "Al-Qur'an — Surah Al-Ma'idah (5:32)",
     grade: "قرآن مجید — Surah 5:32",
-    donorTakeaway: "A 15-minute blood donation can restart a patient's failing heart, earning you the immense reward of preserving all human lives on earth."
+    donorTakeaway: "A 15-minute blood donation can restart a patient's failing heart, earning you the immense reward of preserving all human lives on earth.",
+    donorTakeawayUrdu: "آپ کے خون کی ایک بوتل کسی مرتے ہوئے انسان کی جان بچا سکتی ہے، اور قرآن کے مطابق یہ پوری انسانیت کو بچانے کے برابر ہے۔"
   },
   {
     id: 4,
@@ -60,11 +64,13 @@ const DONOR_HADITHS = [
     english: "Every act of goodness is an ongoing charity (Sadaqah). Donating blood without monetary return is one of the purest forms of voluntary bodily charity.",
     source: "Sahih Al-Bukhari 6021 • Sahih Muslim 1005",
     grade: "متفق علیہ — Agreed Upon",
-    donorTakeaway: "You do not need wealth to give noble charity; giving the gift of life from the good health Allah blessed you with is supreme, ongoing Sadaqah."
+    donorTakeaway: "You do not need wealth to give noble charity; giving the gift of life from the good health Allah blessed you with is supreme, ongoing Sadaqah.",
+    donorTakeawayUrdu: "صدقے کیلئے صرف مال کی ضرورت نہیں۔ اللہ کی دی ہوئی صحت میں سے کسی ضرورت مند کو خون دینا عظیم جسمانی صدقۂ جاریہ ہے۔"
   }
 ];
 
 export default function DonorDashboard({ currentUser, onNavigateHome, onNavigateEmergency }) {
+  const { t, isUrdu } = useLanguage();
   const donorData = currentUser || {
     name: 'Muhammad Adil',
     email: 'adilraxiq64@gmail.com',
@@ -183,13 +189,13 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
             <div>
               <div className="inline-flex items-center gap-1.5 bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold mb-2">
                 <Heart className="w-3.5 h-3.5 fill-current" />
-                <span>Verified LifeLink Volunteer Donor</span>
+                <span>{t('badge_verified', 'Verified LifeLink Volunteer Donor')}</span>
               </div>
               <h1 className="text-2xl sm:text-4xl font-extrabold font-display text-gray-900 mb-1">
-                Welcome back, {donorData.name}!
+                {t('donor_welcome', 'Welcome back')}, {donorData.name}!
               </h1>
               <p className="text-gray-500 text-sm max-w-xl">
-                Your personal donor hub. Keep your availability updated so hospitals and coordinators can reach you during critical moments.
+                {t('donor_subtitle', 'Your personal donor hub. Keep your availability updated so hospitals and coordinators can reach you during critical moments.')}
               </p>
             </div>
           </div>
@@ -206,10 +212,10 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
               }`}
             >
               <span className={`w-3 h-3 rounded-full ${isAvailable ? 'bg-white animate-pulse' : 'bg-gray-400'}`} />
-              <span>{isAvailable ? '🟢 Available to Donate' : '⚪ Temporarily Resting'}</span>
+              <span>{isAvailable ? `🟢 ${t('status_available', 'Available to Donate')}` : `⚪ ${t('status_resting', 'Temporarily Resting')}`}</span>
             </button>
             <span className="text-[11px] text-gray-400 text-center lg:text-right">
-              {isAvailable ? 'Hospitals can see you on the active donor network' : 'You will not receive urgent emergency calls while resting'}
+              {isAvailable ? t('donor_available_msg') : t('donor_resting_msg')}
             </span>
           </div>
         </div>
@@ -218,7 +224,7 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-8 pt-6 border-t border-gray-100">
           <div className="flex items-center gap-2 bg-red-50 text-red-700 px-4 py-2 rounded-xl text-xs font-bold border border-red-200">
             <Droplets className="w-4 h-4 text-red-600" />
-            <span>Blood Group: {bloodGroup}</span>
+            <span>{isUrdu ? 'بلڈ گروپ' : 'Blood Group'}: {bloodGroup}</span>
           </div>
           <div className="flex items-center gap-2 bg-slate-100 text-gray-700 px-4 py-2 rounded-xl text-xs font-semibold border border-gray-200">
             <Phone className="w-4 h-4 text-gray-500" />
@@ -245,13 +251,13 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-xs text-white px-3 py-1 rounded-full text-xs font-bold mb-3 uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>National SOS Broadcast</span>
+              <span>{isUrdu ? 'ملک گیر ہنگامی براڈکاسٹ' : 'National SOS Broadcast'}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold font-display leading-tight mb-2">
-              Looking to Respond to Hospital Emergencies?
+              {t('donor_cta_title', 'Looking to Respond to Hospital Emergencies?')}
             </h2>
             <p className="text-red-100 text-sm sm:text-base leading-relaxed">
-              Explore the nationwide <strong>Patients In Need</strong> board. Filter by your blood group ({bloodGroup}) or city to connect with families and hospital blood banks right now.
+              {t('donor_cta_desc', 'Explore the nationwide Patients In Need board. Filter by your blood group or city to connect with families and hospital blood banks right now.')}
             </p>
           </div>
 
@@ -259,7 +265,7 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
             onClick={onNavigateEmergency}
             className="flex-shrink-0 bg-white text-red-600 hover:bg-red-50 font-bold px-6 py-3.5 rounded-2xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2 text-sm cursor-pointer group"
           >
-            <span>Open Patients In Need</span>
+            <span>{t('donor_cta_btn', 'Open Patients In Need')}</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </button>
         </div>
@@ -273,7 +279,9 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
             <Droplets className="w-6 h-6" />
           </div>
           <div className="text-3xl font-extrabold text-gray-900 font-display">{bloodGroup}</div>
-          <div className="text-xs text-gray-500 mt-1 uppercase font-semibold">Your Blood Group</div>
+          <div className="text-xs text-gray-500 mt-1 uppercase font-semibold">
+            {isUrdu ? 'آپ کا بلڈ گروپ' : 'Your Blood Group'}
+          </div>
           <div className="text-[11px] text-red-600 font-medium mt-1">{compatibility.label}</div>
         </div>
 
@@ -285,10 +293,16 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
             <Activity className="w-6 h-6" />
           </div>
           <div className={`text-2xl font-extrabold font-display ${isAvailable ? 'text-emerald-700' : 'text-amber-700'}`}>
-            {isAvailable ? 'Ready' : 'Resting'}
+            {isAvailable ? (isUrdu ? 'دستیاب' : 'Ready') : (isUrdu ? 'آرام پر' : 'Resting')}
           </div>
-          <div className="text-xs text-gray-500 mt-1 uppercase font-semibold">Current Availability</div>
-          <div className="text-[11px] text-gray-400 mt-1">{isAvailable ? 'Standby for emergencies' : 'Temporarily paused'}</div>
+          <div className="text-xs text-gray-500 mt-1 uppercase font-semibold">
+            {isUrdu ? 'موجودہ دستیابی' : 'Current Availability'}
+          </div>
+          <div className="text-[11px] text-gray-400 mt-1">
+            {isAvailable 
+              ? (isUrdu ? 'ایمرجنسی کیلئے تیار' : 'Standby for emergencies') 
+              : (isUrdu ? 'عارضی طور پر موقوف' : 'Temporarily paused')}
+          </div>
         </div>
 
         {/* Total Donations Logged */}
@@ -297,13 +311,15 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
             <Award className="w-6 h-6" />
           </div>
           <div className="text-3xl font-extrabold text-gray-900 font-display">{totalDonations}</div>
-          <div className="text-xs text-gray-500 mt-1 uppercase font-semibold">Verified Donations</div>
+          <div className="text-xs text-gray-500 mt-1 uppercase font-semibold">
+            {isUrdu ? 'تصدیق شدہ عطیات' : 'Verified Donations'}
+          </div>
           <button
             onClick={() => setShowLogModal(true)}
             className="mt-2 text-xs text-purple-600 hover:text-purple-700 font-bold inline-flex items-center gap-1 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Log a Donation</span>
+            <span>{isUrdu ? 'عطیہ درج کریں' : 'Log a Donation'}</span>
           </button>
         </div>
 
@@ -313,8 +329,12 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
             <Phone className="w-6 h-6" />
           </div>
           <div className="text-lg sm:text-xl font-extrabold text-gray-900 font-display truncate">03494996898</div>
-          <div className="text-xs text-gray-500 mt-1 uppercase font-semibold">LifeLink Helpline</div>
-          <div className="text-[11px] text-gray-400 mt-1">Shergarh, Mardan HQ</div>
+          <div className="text-xs text-gray-500 mt-1 uppercase font-semibold">
+            {isUrdu ? 'لائف لنک ہیلپ لائن' : 'LifeLink Helpline'}
+          </div>
+          <div className="text-[11px] text-gray-400 mt-1">
+            {isUrdu ? 'مرکزی دفتر: شیرگڑھ، مردان' : 'Shergarh, Mardan HQ'}
+          </div>
         </div>
       </div>
 
@@ -329,19 +349,21 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
           <div>
             <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-900 px-3.5 py-1 rounded-full text-xs font-bold mb-2.5">
               <Sparkles className="w-3.5 h-3.5 fill-amber-600 text-amber-600" />
-              <span>فضائل و برکات • Spiritual Virtues of Blood Donation</span>
+              <span>{isUrdu ? 'فضائل و برکات • خون کے عطیہ کی دینی فضیلت' : 'فضائل و برکات • Spiritual Virtues of Blood Donation'}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold font-display text-gray-900">
-              The Divine Honor of Donating Blood in Islam
+              {isUrdu ? 'اسلام میں خون کا عطیہ دینے کا عظیم الشان اجر' : 'The Divine Honor of Donating Blood in Islam'}
             </h2>
             <p className="text-gray-600 text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
-              Donating a portion of your healthy blood to save a fellow human in critical distress is one of the highest acts of voluntary physical charity (صدقۂ جاریہ) and a direct means of earning Allah's mercy.
+              {isUrdu 
+                ? 'کسی پریشان حال انسان کی جان بچانے کیلئے خون کا عطیہ دینا افضل ترین صدقۂ جاریہ اور اللہ تعالیٰ کی خصوصی رحمت و مغفرت کا ذریعہ ہے۔'
+                : "Donating a portion of your healthy blood to save a fellow human in critical distress is one of the highest acts of voluntary physical charity (صدقۂ جاریہ) and a direct means of earning Allah's mercy."}
             </p>
           </div>
 
           <div className="hidden lg:flex items-center gap-2 text-xs font-bold text-amber-900 bg-amber-100/80 border border-amber-300 px-4 py-2 rounded-2xl shadow-xs">
             <BookOpen className="w-4 h-4 text-amber-700" />
-            <span>صحیح احادیث مبارکہ (Authentic References)</span>
+            <span>{isUrdu ? 'صحیح احادیث مبارکہ' : 'صحیح احادیث مبارکہ (Authentic References)'}</span>
           </div>
         </div>
 
@@ -394,7 +416,8 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
                 <div className="flex items-start gap-2.5">
                   <Heart className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5 fill-red-600 group-hover:scale-110 transition-transform" />
                   <p className="text-xs text-gray-700 font-medium leading-relaxed">
-                    <strong className="text-red-700">Motivation for Donors:</strong> {item.donorTakeaway}
+                    <strong className="text-red-700">{isUrdu ? 'ڈونرز کیلئے ترغیب:' : 'Motivation for Donors:'}</strong>{' '}
+                    {isUrdu ? (item.donorTakeawayUrdu || item.donorTakeaway) : item.donorTakeaway}
                   </p>
                 </div>
               </div>
@@ -412,16 +435,18 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
             </div>
             <div>
               <h2 className="text-lg sm:text-xl font-bold font-display text-gray-900">
-                Blood Group Compatibility: {bloodGroup}
+                {isUrdu ? `بلڈ گروپ کی مطابقت: ${bloodGroup}` : `Blood Group Compatibility: ${bloodGroup}`}
               </h2>
-              <p className="text-xs text-gray-500">Transfusion matching rules according to WHO guidelines</p>
+              <p className="text-xs text-gray-500">
+                {isUrdu ? 'عالمی ادارہ صحت (WHO) کے مطابق محفوظ خون کی منتقلی کے اصول' : 'Transfusion matching rules according to WHO guidelines'}
+              </p>
             </div>
           </div>
 
           <div className="space-y-4">
             <div className="p-4 rounded-2xl bg-red-50/70 border border-red-100">
               <span className="text-xs font-bold uppercase tracking-wider text-red-700 block mb-2">
-                🩸 Patients You Can Directly Save ({bloodGroup} Donates to):
+                {isUrdu ? `🩸 جن مریضوں کو آپ براہِ راست خون دے سکتے ہیں (${bloodGroup}):` : `🩸 Patients You Can Directly Save (${bloodGroup} Donates to):`}
               </span>
               <div className="flex flex-wrap gap-2">
                 {compatibility.canDonateTo.map((group) => (
@@ -437,7 +462,7 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
 
             <div className="p-4 rounded-2xl bg-slate-50 border border-gray-200">
               <span className="text-xs font-bold uppercase tracking-wider text-gray-700 block mb-2">
-                🛡️ In Case of Personal Emergency (You Can Receive From):
+                {isUrdu ? '🛡️ ذاتی ایمرجنسی کی صورت میں (آپ ان سے خون لے سکتے ہیں):' : '🛡️ In Case of Personal Emergency (You Can Receive From):'}
               </span>
               <div className="flex flex-wrap gap-2">
                 {compatibility.canReceiveFrom.map((group) => (
@@ -454,7 +479,7 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
 
           <div className="mt-6 pt-4 border-t border-gray-100 flex items-center gap-2 text-xs text-gray-500">
             <Shield className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-            <span>1 single whole blood donation can be separated to save up to 3 individual patients.</span>
+            <span>{isUrdu ? 'خون کا صرف ۱ عطیہ ۳ مختلف مریضوں کی جانیں بچانے کیلئے کافی ہوتا ہے۔' : '1 single whole blood donation can be separated to save up to 3 individual patients.'}</span>
           </div>
         </div>
 
@@ -466,9 +491,11 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
             </div>
             <div>
               <h2 className="text-lg sm:text-xl font-bold font-display text-gray-900">
-                Donor Health Readiness Checklist
+                {isUrdu ? 'ڈونر کی صحت اور اہلیت کا جائزہ' : 'Donor Health Readiness Checklist'}
               </h2>
-              <p className="text-xs text-gray-500">Ensure these pre-conditions before heading to donate</p>
+              <p className="text-xs text-gray-500">
+                {isUrdu ? 'خون دینے جانے سے پہلے ان بنیادی شرائط کی تصدیق کر لیں' : 'Ensure these pre-conditions before heading to donate'}
+              </p>
             </div>
           </div>
 
@@ -478,7 +505,8 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
                 <Check className="w-3.5 h-3.5 stroke-[3]" />
               </div>
               <div>
-                <strong className="text-gray-900">Weight & Age:</strong> Minimum 50 kg (110 lbs) and aged between 18–60 years.
+                <strong className="text-gray-900">{isUrdu ? 'وزن اور عمر:' : 'Weight & Age:'}</strong>{' '}
+                {isUrdu ? 'کم از کم وزن ۵۰ کلوگرام اور عمر ۱۸ سے ۶۰ سال کے درمیان ہو۔' : 'Minimum 50 kg (110 lbs) and aged between 18–60 years.'}
               </div>
             </li>
 
@@ -487,7 +515,8 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
                 <Check className="w-3.5 h-3.5 stroke-[3]" />
               </div>
               <div>
-                <strong className="text-gray-900">Safe Donation Gap:</strong> Minimum 90 days (3 months) since your last whole blood donation.
+                <strong className="text-gray-900">{isUrdu ? 'عطیات کا درمیانی وقفہ:' : 'Safe Donation Gap:'}</strong>{' '}
+                {isUrdu ? 'پچھلے عطیہ سے کم از کم ۹۰ دن (۳ ماہ) کا وقفہ گزر چکا ہو۔' : 'Minimum 90 days (3 months) since your last whole blood donation.'}
               </div>
             </li>
 
@@ -496,7 +525,8 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
                 <Check className="w-3.5 h-3.5 stroke-[3]" />
               </div>
               <div>
-                <strong className="text-gray-900">Health & Vitals:</strong> No fever, cough, flu, or active antibiotic intake in the last 7 days.
+                <strong className="text-gray-900">{isUrdu ? 'صحت اور ادویات:' : 'Health & Vitals:'}</strong>{' '}
+                {isUrdu ? 'گزشتہ ۷ دنوں میں بخار، کھانسی، نزلہ یا کوئی اینٹی بائیوٹک دوا نہ لی ہو۔' : 'No fever, cough, flu, or active antibiotic intake in the last 7 days.'}
               </div>
             </li>
 
@@ -505,19 +535,20 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
                 <Check className="w-3.5 h-3.5 stroke-[3]" />
               </div>
               <div>
-                <strong className="text-gray-900">Hydration & Rest:</strong> Had at least 6 hours of sound sleep and drank plenty of water.
+                <strong className="text-gray-900">{isUrdu ? 'آرام اور پانی:' : 'Hydration & Rest:'}</strong>{' '}
+                {isUrdu ? 'کم از کم ۶ گھنٹے پرسکون نیند لی ہو اور وافر مقدار میں پانی پیا ہو۔' : 'Had at least 6 hours of sound sleep and drank plenty of water.'}
               </div>
             </li>
           </ul>
 
           <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
-            <span className="text-xs text-gray-500">Need medical advice?</span>
+            <span className="text-xs text-gray-500">{isUrdu ? 'طبی رہنمائی درکار ہے؟' : 'Need medical advice?'}</span>
             <a
               href="tel:03494996898"
               className="text-xs text-red-600 hover:text-red-700 font-bold flex items-center gap-1"
             >
               <Phone className="w-3.5 h-3.5" />
-              <span>Call Helpline 03494996898</span>
+              <span>{isUrdu ? 'ہیلپ لائن: 03494996898' : 'Call Helpline 03494996898'}</span>
             </a>
           </div>
         </div>
@@ -527,13 +558,13 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
       <div className="glass-card bg-slate-50/80 rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-red-600 block mb-1">
-            LifeLink Central Operations
+            {isUrdu ? 'لائف لنک مرکزی رابطہ دفتر' : 'LifeLink Central Operations'}
           </span>
           <h3 className="text-lg font-bold text-gray-900">
-            Shergarh, Mardan, Khyber Pakhtunkhwa
+            {isUrdu ? 'شیرگڑھ، مردان، خیبر پختونخوا' : 'Shergarh, Mardan, Khyber Pakhtunkhwa'}
           </h3>
           <p className="text-xs text-gray-500 mt-1">
-            Official Email: <a href="mailto:adilraxiq64@gmail.com" className="text-red-600 hover:underline font-semibold">adilraxiq64@gmail.com</a> • Official Helpline: <span className="text-gray-900 font-semibold">03494996898</span>
+            {isUrdu ? 'سرکاری ای میل:' : 'Official Email:'} <a href="mailto:adilraxiq64@gmail.com" className="text-red-600 hover:underline font-semibold">adilraxiq64@gmail.com</a> • {isUrdu ? 'ہیلپ لائن:' : 'Official Helpline:'} <span className="text-gray-900 font-semibold">03494996898</span>
           </p>
         </div>
 
@@ -541,7 +572,7 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
           onClick={onNavigateEmergency}
           className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-red-600 text-white font-bold text-xs hover:bg-red-700 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
         >
-          <span>Find Patient in Need</span>
+          <span>{isUrdu ? 'ضرورت مند مریض تلاش کریں' : 'Find Patient in Need'}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>
@@ -554,7 +585,7 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
               <div className="flex items-center justify-between mb-2">
                 <div className="inline-flex items-center gap-1.5 bg-white/20 px-3 py-1 rounded-full text-xs font-bold">
                   <Award className="w-3.5 h-3.5" />
-                  <span>Lifesaver Record</span>
+                  <span>{isUrdu ? 'زندگی بچانے کا ریکارڈ' : 'Lifesaver Record'}</span>
                 </div>
                 <button
                   onClick={() => setShowLogModal(false)}
@@ -563,16 +594,16 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
                   ✕
                 </button>
               </div>
-              <h3 className="text-xl font-bold font-display">Log a New Donation</h3>
+              <h3 className="text-xl font-bold font-display">{isUrdu ? 'نیا عطیہ درج کریں' : 'Log a New Donation'}</h3>
               <p className="text-xs text-red-100 mt-1">
-                Record your latest successful blood donation to update your profile.
+                {isUrdu ? 'اپنے پروفائل کو اپ ڈیٹ کرنے کیلئے اپنے حالیہ کامیاب خون کے عطیہ کا اندراج کریں۔' : 'Record your latest successful blood donation to update your profile.'}
               </p>
             </div>
 
             <form onSubmit={handleLogDonationSubmit} className="p-6 space-y-4">
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                  Donation Date
+                  {isUrdu ? 'عطیہ کی تاریخ' : 'Donation Date'}
                 </label>
                 <input
                   type="date"
@@ -585,11 +616,11 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
 
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                  Hospital / Blood Center Name
+                  {isUrdu ? 'ہسپتال / بلڈ سنٹر کا نام' : 'Hospital / Blood Center Name'}
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Mardan Medical Complex, Shergarh Clinic"
+                  placeholder={isUrdu ? 'مثلاً مردان میڈیکل کمپلیکس، شیرگڑھ کلینک' : 'e.g. Mardan Medical Complex, Shergarh Clinic'}
                   value={logForm.hospital}
                   onChange={(e) => setLogForm({ ...logForm, hospital: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
@@ -598,11 +629,11 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
 
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                  Notes (Optional)
+                  {isUrdu ? 'نوٹس (اختیاری)' : 'Notes (Optional)'}
                 </label>
                 <textarea
                   rows="2"
-                  placeholder="Patient name or general notes..."
+                  placeholder={isUrdu ? 'مریض کا نام یا اضافی تفصیل...' : 'Patient name or general notes...'}
                   value={logForm.notes}
                   onChange={(e) => setLogForm({ ...logForm, notes: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
@@ -615,13 +646,13 @@ export default function DonorDashboard({ currentUser, onNavigateHome, onNavigate
                   onClick={() => setShowLogModal(false)}
                   className="px-4 py-2.5 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 cursor-pointer"
                 >
-                  Cancel
+                  {isUrdu ? 'منسوخ کریں' : 'Cancel'}
                 </button>
                 <button
                   type="submit"
                   className="btn-medical text-white px-6 py-2.5 rounded-xl text-xs font-bold shadow-medical cursor-pointer"
                 >
-                  Save Donation
+                  {isUrdu ? 'عطیہ محفوظ کریں' : 'Save Donation'}
                 </button>
               </div>
             </form>

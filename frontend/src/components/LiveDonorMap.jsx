@@ -5,6 +5,7 @@ import {
   Heart, Droplets, MapPin, Phone, MessageCircle, 
   Navigation, Crosshair, Sparkles, Shield, User, X, CheckCircle2 
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const CITY_COORDINATES = {
   'shergarh': [34.3855, 71.8953],
@@ -50,12 +51,13 @@ export default function LiveDonorMap({
   onOpenChat, 
   height = '560px' 
 }) {
+  const { t, isUrdu } = useLanguage();
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersLayerRef = useRef(null);
   const tileLayerRef = useRef(null);
   const [selectedDonor, setSelectedDonor] = useState(null);
-  const [activeCityName, setActiveCityName] = useState('Shergarh & Mardan');
+  const [activeCityName, setActiveCityName] = useState(isUrdu ? 'شیرگڑھ اور مردان' : 'Shergarh & Mardan');
   const [mapLayer, setMapLayer] = useState('streets'); // 'streets' | 'satellite'
 
   // Compute donor coordinates with deterministic jitter
@@ -302,7 +304,7 @@ export default function LiveDonorMap({
     <div className="relative rounded-3xl overflow-hidden border border-red-200/80 shadow-2xl bg-slate-900 group">
       
       {/* 🧭 Top Floating Map Radar HUD Overlay */}
-      <div className="absolute top-4 left-4 right-14 sm:right-auto z-[400] flex flex-wrap items-center gap-2 pointer-events-auto">
+      <div className={`absolute top-4 ${isUrdu ? 'right-4 left-14 sm:left-auto' : 'left-4 right-14 sm:right-auto'} z-[400] flex flex-wrap items-center gap-2 pointer-events-auto`}>
         <div className="glass-card bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-lg border border-red-100 flex items-center gap-3">
           <span className="relative flex h-3 w-3">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -310,37 +312,43 @@ export default function LiveDonorMap({
           </span>
           <div>
             <div className="text-xs font-bold text-gray-900 flex items-center gap-1.5">
-              <span>Live Donor Radar</span>
+              <span>{isUrdu ? 'لائیو ڈونر ریڈار' : 'Live Donor Radar'}</span>
               <span className="bg-red-100 text-red-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
-                {donors.length} Donors Live
+                {donors.length} {isUrdu ? 'آن لائن ڈونرز' : 'Donors Live'}
               </span>
             </div>
             <p className="text-[10px] text-gray-500">
-              Showing active lifesavers near {activeCityName}
+              {isUrdu ? `${activeCityName} کے قریب فعال ڈونرز` : `Showing active lifesavers near ${activeCityName}`}
             </p>
           </div>
         </div>
 
         {/* Quick City Jumps */}
         <div className="hidden sm:flex items-center gap-1.5 bg-white/90 backdrop-blur-md p-1.5 rounded-2xl shadow-lg border border-gray-200 text-xs font-semibold">
-          {['Shergarh', 'Mardan', 'Peshawar', 'Islamabad', 'Lahore'].map((c) => (
+          {[
+            { id: 'Shergarh', en: 'Shergarh', ur: 'شیرگڑھ' },
+            { id: 'Mardan', en: 'Mardan', ur: 'مردان' },
+            { id: 'Peshawar', en: 'Peshawar', ur: 'پشاور' },
+            { id: 'Islamabad', en: 'Islamabad', ur: 'اسلام آباد' },
+            { id: 'Lahore', en: 'Lahore', ur: 'لاہور' }
+          ].map((c) => (
             <button
-              key={c}
-              onClick={() => handleCityQuickJump(c)}
+              key={c.id}
+              onClick={() => handleCityQuickJump(c.id)}
               className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-                activeCityName.toLowerCase().includes(c.toLowerCase())
+                activeCityName.toLowerCase().includes(c.id.toLowerCase())
                   ? 'bg-red-600 text-white font-bold shadow-xs'
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              {c}
+              {isUrdu ? c.ur : c.en}
             </button>
           ))}
         </div>
       </div>
 
       {/* 🎯 Top Right Controls: Streets/Satellite Layer Switcher & GPS Recenter */}
-      <div className="absolute top-4 right-4 z-[400] flex items-center gap-2 pointer-events-auto">
+      <div className={`absolute top-4 ${isUrdu ? 'left-4' : 'right-4'} z-[400] flex items-center gap-2 pointer-events-auto`}>
         <div className="hidden sm:flex items-center gap-1 bg-white/95 backdrop-blur-md p-1 rounded-2xl shadow-lg border border-gray-200">
           <button
             type="button"
@@ -351,7 +359,7 @@ export default function LiveDonorMap({
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            🗺️ Streets
+            🗺️ {isUrdu ? 'نقشہ' : 'Streets'}
           </button>
           <button
             type="button"
@@ -362,14 +370,14 @@ export default function LiveDonorMap({
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            🛰️ Satellite
+            🛰️ {isUrdu ? 'سیٹلائٹ' : 'Satellite'}
           </button>
         </div>
 
         <button
           onClick={handleLocateMe}
           className="w-10 h-10 rounded-2xl bg-white hover:bg-gray-50 text-gray-700 flex items-center justify-center shadow-lg border border-gray-200 transition-all cursor-pointer"
-          title="Recenter Map"
+          title={isUrdu ? 'نقشہ دوبارہ درمیان میں لائیں' : 'Recenter Map'}
         >
           <Crosshair className="w-5 h-5 text-red-600" />
         </button>
@@ -384,11 +392,11 @@ export default function LiveDonorMap({
 
       {/* 👤 Floating Selected Donor Card Modal (Sliding Glass Tray) */}
       {selectedDonor && (
-        <div className="absolute bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 z-[400] animate-fade-in pointer-events-auto">
+        <div className={`absolute bottom-4 left-4 right-4 ${isUrdu ? 'sm:right-auto sm:left-6 font-urdu' : 'sm:left-auto sm:right-6'} sm:w-96 z-[400] animate-fade-in pointer-events-auto`} dir={isUrdu ? 'rtl' : 'ltr'}>
           <div className="glass-card bg-white/95 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border-2 border-red-200 shadow-2xl relative">
             <button
               onClick={() => setSelectedDonor(null)}
-              className="absolute top-3.5 right-3.5 w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center cursor-pointer transition-colors"
+              className={`absolute top-3.5 ${isUrdu ? 'left-3.5' : 'right-3.5'} w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center cursor-pointer transition-colors`}
             >
               <X className="w-4 h-4" />
             </button>
@@ -405,17 +413,17 @@ export default function LiveDonorMap({
               </div>
 
               {/* Donor Details */}
-              <div className="flex-1 pr-6">
+              <div className={`flex-1 ${isUrdu ? 'pl-6' : 'pr-6'}`}>
                 <div className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md mb-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>🟢 Available Live Now</span>
+                  <span>{isUrdu ? '🟢 اب دستیاب ہے' : '🟢 Available Live Now'}</span>
                 </div>
                 <h3 className="text-base font-extrabold text-gray-900 leading-tight">
                   {selectedDonor.name}
                 </h3>
                 <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
                   <MapPin className="w-3.5 h-3.5 text-red-500" />
-                  <span>{selectedDonor.city || selectedDonor.address || 'Pakistan'}</span>
+                  <span>{selectedDonor.city || selectedDonor.address || (isUrdu ? 'پاکستان' : 'Pakistan')}</span>
                 </p>
               </div>
             </div>
@@ -423,16 +431,16 @@ export default function LiveDonorMap({
             {/* Donor Metrics Badge */}
             <div className="grid grid-cols-2 gap-2 mt-4 p-3 rounded-2xl bg-slate-50 border border-gray-100 text-xs">
               <div>
-                <span className="text-gray-400 block text-[10px] uppercase font-bold">Blood Group</span>
+                <span className="text-gray-400 block text-[10px] uppercase font-bold">{isUrdu ? 'خون کا گروپ' : 'Blood Group'}</span>
                 <span className="font-extrabold text-red-600 text-sm flex items-center gap-1">
                   <Droplets className="w-3.5 h-3.5 fill-red-600" />
                   {selectedDonor.blood_type}
                 </span>
               </div>
               <div>
-                <span className="text-gray-400 block text-[10px] uppercase font-bold">Verified Donations</span>
+                <span className="text-gray-400 block text-[10px] uppercase font-bold">{isUrdu ? 'تصدیق شدہ عطیات' : 'Verified Donations'}</span>
                 <span className="font-extrabold text-gray-800 text-sm">
-                  {selectedDonor.total_donations || 1} Donations
+                  {selectedDonor.total_donations || 1} {isUrdu ? 'عطیات' : 'Donations'}
                 </span>
               </div>
             </div>
@@ -444,7 +452,7 @@ export default function LiveDonorMap({
                 className="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 transition-all"
               >
                 <Phone className="w-3.5 h-3.5" />
-                <span>Call Donor</span>
+                <span>{t('btn_call_donor', 'Call Donor')}</span>
               </a>
 
               <button
@@ -455,26 +463,26 @@ export default function LiveDonorMap({
                 className="btn-medical text-white py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-medical cursor-pointer"
               >
                 <MessageCircle className="w-3.5 h-3.5" />
-                <span>Direct Chat</span>
+                <span>{t('btn_chat', 'Direct Chat')}</span>
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* 💡 Legend Overlay at bottom left */}
-      <div className="absolute bottom-4 left-4 z-[400] hidden md:flex items-center gap-3 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl text-[11px] font-semibold text-gray-700 shadow-md border border-gray-200 pointer-events-auto">
+      {/* 💡 Legend Overlay at bottom */}
+      <div className={`absolute bottom-4 ${isUrdu ? 'right-4' : 'left-4'} z-[400] hidden md:flex items-center gap-3 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl text-[11px] font-semibold text-gray-700 shadow-md border border-gray-200 pointer-events-auto`} dir={isUrdu ? 'rtl' : 'ltr'}>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Available Donor</span>
+          <span>{isUrdu ? 'دستیاب ڈونر' : 'Available Donor'}</span>
         </div>
         <div className="h-3 w-px bg-gray-300" />
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-          <span>Resting</span>
+          <span>{isUrdu ? 'آرام پر' : 'Resting'}</span>
         </div>
         <div className="h-3 w-px bg-gray-300" />
-        <span className="text-gray-400">Click any circle to call or chat</span>
+        <span className="text-gray-400">{isUrdu ? 'کال یا چیٹ کیلئے کسی بھی دائرے پر کلک کریں' : 'Click any circle to call or chat'}</span>
       </div>
 
     </div>

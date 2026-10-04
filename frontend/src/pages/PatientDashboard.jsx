@@ -5,8 +5,10 @@ import {
 } from 'lucide-react';
 import { fetchDonors, createEmergencyRequest } from '../services/api';
 import LiveDonorMap from '../components/LiveDonorMap';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function PatientDashboard({ currentUser, onNavigateHome }) {
+  const { t, isUrdu } = useLanguage();
   const [donors, setDonors] = useState([]);
   const [loadingDonors, setLoadingDonors] = useState(true);
   const [filterGroup, setFilterGroup] = useState('all');
@@ -121,18 +123,29 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
         <div className="max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-red-100 text-red-700 px-4 py-1.5 rounded-full text-xs font-bold mb-4">
             <Heart className="w-3.5 h-3.5 fill-current" />
-            <span>Emergency Patient Care Portal</span>
+            <span>{t('brand_patient_sub', 'Emergency Patient Care Portal')}</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold font-display text-gray-900 tracking-tight mb-4">
-            Welcome to the{' '}
-            <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
-              Patient Portal
-            </span>
+            {isUrdu ? (
+              <>
+                خوش آمدید{' '}
+                <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+                  مریض پورٹل
+                </span>
+              </>
+            ) : (
+              <>
+                Welcome to the{' '}
+                <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+                  Patient Portal
+                </span>
+              </>
+            )}
           </h1>
 
           <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-8">
-            Your health and hope matter. Here you can request blood in emergencies, find compatible donors across your city, and coordinate rapid hospital transfusions.
+            {t('patient_dash_subtitle', 'Monitor active emergency alerts, track responding donors, and post urgent requirements.')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
@@ -141,14 +154,14 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
               className="btn-medical text-white px-8 py-3.5 rounded-2xl font-bold text-sm shadow-medical flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
             >
               <AlertTriangle className="w-4 h-4" />
-              <span>Request Blood Now</span>
+              <span>{t('patient_post_btn', 'Request Blood Now')}</span>
             </button>
             <a
               href="#active-donors"
               className="bg-slate-100 hover:bg-slate-200 text-gray-800 border border-gray-200 px-8 py-3.5 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
             >
               <Users className="w-4 h-4 text-red-600" />
-              <span>Browse Active Donors</span>
+              <span>{t('nav_find_donors', 'Browse Active Donors')}</span>
             </a>
           </div>
         </div>
@@ -195,17 +208,23 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 text-center">
         <div className="glass-card bg-white p-6 rounded-2xl border border-gray-200 shadow-xs">
           <div className="text-3xl sm:text-4xl font-extrabold text-emerald-600 font-display mb-1">
-            {donors.length}+ Ready
+            {donors.length}+ {isUrdu ? 'تیار' : 'Ready'}
           </div>
-          <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">Active Verified Donors</div>
+          <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">
+            {isUrdu ? 'فعال تصدیق شدہ ڈونرز' : 'Active Verified Donors'}
+          </div>
         </div>
         <div className="glass-card bg-white p-6 rounded-2xl border border-gray-200 shadow-xs">
           <div className="text-3xl sm:text-4xl font-extrabold text-red-600 font-display mb-1">98%</div>
-          <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">Emergency Fulfillment</div>
+          <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">
+            {isUrdu ? 'ہنگامی کامیابی کی شرح' : 'Emergency Fulfillment'}
+          </div>
         </div>
         <div className="glass-card bg-white p-6 rounded-2xl border border-gray-200 shadow-xs">
           <div className="text-3xl sm:text-4xl font-extrabold text-blue-600 font-display mb-1">24/7</div>
-          <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">Direct Hospital Support</div>
+          <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">
+            {isUrdu ? 'براہِ راست ہسپتال سپورٹ' : 'Direct Hospital Support'}
+          </div>
         </div>
       </div>
 
@@ -215,10 +234,10 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold font-display text-gray-900 flex items-center gap-2">
               <Users className="w-6 h-6 text-red-600" />
-              <span>Available Blood Donors</span>
+              <span>{isUrdu ? 'دستیاب رضاکار بلڈ ڈونرز' : 'Available Blood Donors'}</span>
             </h2>
             <p className="text-gray-500 text-xs sm:text-sm">
-              Connect with volunteer donors ready to help in your area
+              {isUrdu ? 'اپنے قریبی علاقے میں خون دینے کیلئے تیار رضاکار ڈونرز سے فوری رابطہ کریں' : 'Connect with volunteer donors ready to help in your area'}
             </p>
           </div>
 
@@ -230,7 +249,7 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
                 type="text"
                 value={filterCity}
                 onChange={(e) => setFilterCity(e.target.value)}
-                placeholder="Search city (e.g. Lahore)"
+                placeholder={isUrdu ? 'شہر تلاش کریں (مثلاً لاہور، مردان)' : 'Search city (e.g. Lahore)'}
                 className="pl-9 pr-3 py-2 text-xs rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-600 w-44 sm:w-56"
               />
             </div>
@@ -238,7 +257,7 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
               type="submit"
               className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-gray-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
             >
-              Search
+              {isUrdu ? 'تلاش کریں' : 'Search'}
             </button>
           </form>
         </div>
@@ -255,7 +274,7 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
                   : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
               }`}
             >
-              {bg === 'all' ? 'All Blood Types' : bg}
+              {bg === 'all' ? (isUrdu ? 'تمام بلڈ گروپس' : 'All Blood Types') : bg}
             </button>
           ))}
         </div>
@@ -273,7 +292,7 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
               }`}
             >
               <Map className="w-4 h-4" />
-              <span>🗺️ Live Donor Radar Map</span>
+              <span>{isUrdu ? '🗺️ لائیو ڈونر ریڈار میپ' : '🗺️ Live Donor Radar Map'}</span>
             </button>
 
             <button
@@ -286,7 +305,7 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
               }`}
             >
               <LayoutGrid className="w-4 h-4" />
-              <span>📋 List Grid ({donors.length})</span>
+              <span>{isUrdu ? `📋 ڈائریکٹری لسٹ (${donors.length})` : `📋 List Grid (${donors.length})`}</span>
             </button>
           </div>
 
@@ -294,10 +313,10 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
             {viewMode === 'map' ? (
               <span className="inline-flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                <span>Tap any circular donor pin to connect or chat</span>
+                <span>{isUrdu ? 'رابطہ یا چیٹ کیلئے نقشے پر موجود گول ڈونر پن پر کلک کریں' : 'Tap any circular donor pin to connect or chat'}</span>
               </span>
             ) : (
-              <span>Showing {donors.length} nearby donors</span>
+              <span>{isUrdu ? `قریبی ${donors.length} ڈونرز موجود ہیں` : `Showing ${donors.length} nearby donors`}</span>
             )}
           </div>
         </div>
@@ -318,14 +337,14 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
         {loadingDonors ? (
           <div className="text-center py-12">
             <div className="w-8 h-8 border-3 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-gray-500 text-sm">Finding active donors...</p>
+            <p className="text-gray-500 text-sm">{isUrdu ? 'دستیاب ڈونرز تلاش کیے جا رہے ہیں...' : 'Finding active donors...'}</p>
           </div>
         ) : donors.length === 0 ? (
           <div className="glass-card bg-white p-12 text-center rounded-3xl border border-gray-200">
             <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-gray-800">No Donors Found</h3>
+            <h3 className="text-lg font-bold text-gray-800">{isUrdu ? 'کوئی ڈونر نہیں ملا' : 'No Donors Found'}</h3>
             <p className="text-gray-500 text-xs mt-1">
-              Try choosing another blood group or clearing your city filter.
+              {isUrdu ? 'کوئی اور بلڈ گروپ منتخب کریں یا شہر کا فلٹر ہٹا کر دوبارہ کوشش کریں۔' : 'Try choosing another blood group or clearing your city filter.'}
             </p>
           </div>
         ) : (
@@ -348,7 +367,7 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
                         </span>
                         <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600 font-semibold">
                           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                          <span>Available</span>
+                          <span>{isUrdu ? 'دستیاب' : 'Available'}</span>
                         </span>
                       </div>
                     </div>
@@ -364,8 +383,8 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
                       <span>{donor.phone || '03494996898'}</span>
                     </div>
                     <div className="flex items-center justify-between text-[11px] pt-1 border-t border-gray-200">
-                      <span>Age: {donor.age} yrs</span>
-                      <span className="text-emerald-700 font-medium">{donor.total_donations || 4} Donations Given</span>
+                      <span>{isUrdu ? `عمر: ${donor.age} سال` : `Age: ${donor.age} yrs`}</span>
+                      <span className="text-emerald-700 font-medium">{isUrdu ? `${donor.total_donations || 4} عطیات دیے گئے` : `${donor.total_donations || 4} Donations Given`}</span>
                     </div>
                   </div>
                 </div>
@@ -378,18 +397,20 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
                       className="py-2.5 px-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
                     >
                       <Phone className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Call Now</span>
+                      <span>{isUrdu ? 'کال کریں' : 'Call Now'}</span>
                     </a>
                     <a
                       href={`https://wa.me/${(donor.phone || '03494996898').replace(/[^0-9]/g, '').replace(/^0/, '92')}?text=${encodeURIComponent(
-                        `Salam! I am reaching out from LifeLink Patient Portal. We urgently need ${donor.blood_type} blood donation. Are you available to help?`
+                        isUrdu
+                          ? `السلام علیکم! میں لائف لنک مریض پورٹل سے رابطہ کر رہا ہوں۔ ہمیں فوری طور پر ${donor.blood_type} خون کے عطیہ کی ضرورت ہے۔ کیا آپ مدد کیلئے دستیاب ہیں؟`
+                          : `Salam! I am reaching out from LifeLink Patient Portal. We urgently need ${donor.blood_type} blood donation. Are you available to help?`
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="py-2.5 px-2 rounded-xl bg-green-50 hover:bg-green-100 border border-green-200 text-green-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
                     >
                       <MessageCircle className="w-3.5 h-3.5 text-green-600" />
-                      <span>WhatsApp</span>
+                      <span>{isUrdu ? 'واٹس ایپ' : 'WhatsApp'}</span>
                     </a>
                   </div>
 
@@ -401,14 +422,14 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
                       className="py-2 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-gray-700 text-xs font-medium flex items-center justify-center gap-1 transition-colors"
                     >
                       <Navigation className="w-3.5 h-3.5 text-blue-600" />
-                      <span>Directions</span>
+                      <span>{isUrdu ? 'راستہ دیکھیں' : 'Directions'}</span>
                     </a>
                     <button
                       onClick={() => openChatWithDonor(donor)}
                       className="btn-medical text-white py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-medical cursor-pointer"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
-                      <span>Portal Chat</span>
+                      <span>{isUrdu ? 'پورٹل چیٹ' : 'Portal Chat'}</span>
                     </button>
                   </div>
                 </div>
@@ -433,37 +454,45 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
               <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
                 <AlertTriangle className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold font-display text-gray-900">Post Emergency Blood Request</h3>
+              <h3 className="text-2xl font-bold font-display text-gray-900">
+                {isUrdu ? 'خون کی ہنگامی درخواست پوسٹ کریں' : 'Post Emergency Blood Request'}
+              </h3>
               <p className="text-xs text-gray-500 mt-1">
-                Broadcasts an urgent alert to verified donors in your exact city
+                {isUrdu ? 'آپ کے متعلقہ شہر میں تصدیق شدہ ڈونرز کو فوری لائیو الرٹ بھیجتا ہے' : 'Broadcasts an urgent alert to verified donors in your exact city'}
               </p>
             </div>
 
             {requestSuccess ? (
               <div className="py-8 text-center animate-fade-in">
                 <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto mb-3" />
-                <h4 className="text-xl font-bold text-gray-900">Emergency Broadcast Published!</h4>
+                <h4 className="text-xl font-bold text-gray-900">
+                  {isUrdu ? 'ہنگامی الرٹ کامیابی سے نشر ہو گیا!' : 'Emergency Broadcast Published!'}
+                </h4>
                 <p className="text-xs text-gray-600 mt-1">
-                  Donors matching this blood group have been notified.
+                  {isUrdu ? 'اس بلڈ گروپ کے مطابقت رکھنے والے تمام ڈونرز کو مطلع کر دیا گیا ہے۔' : 'Donors matching this blood group have been notified.'}
                 </p>
               </div>
             ) : (
               <form onSubmit={handleRequestSubmit} className="space-y-3.5 text-xs">
                 <div>
-                  <label className="block font-semibold text-gray-700 uppercase mb-1">Patient Name *</label>
+                  <label className="block font-semibold text-gray-700 uppercase mb-1">
+                    {isUrdu ? 'مریض کا نام *' : 'Patient Name *'}
+                  </label>
                   <input
                     type="text"
                     required
                     value={requestForm.patient_name}
                     onChange={(e) => setRequestForm({ ...requestForm, patient_name: e.target.value })}
-                    placeholder="e.g., Patient Full Name"
+                    placeholder={isUrdu ? 'مثلاً مریض کا مکمل نام' : 'e.g., Patient Full Name'}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-semibold text-gray-700 uppercase mb-1">Blood Group *</label>
+                    <label className="block font-semibold text-gray-700 uppercase mb-1">
+                      {isUrdu ? 'مطلوبہ بلڈ گروپ *' : 'Blood Group *'}
+                    </label>
                     <select
                       value={requestForm.blood_type}
                       onChange={(e) => setRequestForm({ ...requestForm, blood_type: e.target.value })}
@@ -476,7 +505,9 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-gray-700 uppercase mb-1">Units Needed *</label>
+                    <label className="block font-semibold text-gray-700 uppercase mb-1">
+                      {isUrdu ? 'کتنی بوتلیں درکار ہیں *' : 'Units Needed *'}
+                    </label>
                     <input
                       type="number"
                       min="1"
@@ -491,45 +522,53 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-semibold text-gray-700 uppercase mb-1">Urgency Level *</label>
+                    <label className="block font-semibold text-gray-700 uppercase mb-1">
+                      {isUrdu ? 'فوری ضرورت کی نوعیت *' : 'Urgency Level *'}
+                    </label>
                     <select
                       value={requestForm.urgency}
                       onChange={(e) => setRequestForm({ ...requestForm, urgency: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                     >
-                      <option value="Critical">Critical (Immediate)</option>
-                      <option value="High">High (Within 6 hours)</option>
-                      <option value="Moderate">Moderate (Today)</option>
+                      <option value="Critical">{isUrdu ? 'انتہائی نازک (فوری درکار)' : 'Critical (Immediate)'}</option>
+                      <option value="High">{isUrdu ? 'اہم (۶ گھنٹوں کے اندر)' : 'High (Within 6 hours)'}</option>
+                      <option value="Moderate">{isUrdu ? 'معمول (آج کے دن میں)' : 'Moderate (Today)'}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-gray-700 uppercase mb-1">City *</label>
+                    <label className="block font-semibold text-gray-700 uppercase mb-1">
+                      {isUrdu ? 'شہر *' : 'City *'}
+                    </label>
                     <input
                       type="text"
                       required
                       value={requestForm.city}
                       onChange={(e) => setRequestForm({ ...requestForm, city: e.target.value })}
-                      placeholder="e.g. Lahore"
+                      placeholder={isUrdu ? 'مثلاً لاہور، مردان' : 'e.g. Lahore'}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-gray-700 uppercase mb-1">Hospital Name & Ward *</label>
+                  <label className="block font-semibold text-gray-700 uppercase mb-1">
+                    {isUrdu ? 'ہسپتال کا نام اور وارڈ *' : 'Hospital Name & Ward *'}
+                  </label>
                   <input
                     type="text"
                     required
                     value={requestForm.hospital}
                     onChange={(e) => setRequestForm({ ...requestForm, hospital: e.target.value })}
-                    placeholder="e.g., Mayo Hospital, Emergency ICU Ward 3"
+                    placeholder={isUrdu ? 'مثلاً میو ہسپتال، ایمرجنسی آئی سی یو وارڈ ۳' : 'e.g., Mayo Hospital, Emergency ICU Ward 3'}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-gray-700 uppercase mb-1">Contact Phone *</label>
+                  <label className="block font-semibold text-gray-700 uppercase mb-1">
+                    {isUrdu ? 'رابطہ فون نمبر *' : 'Contact Phone *'}
+                  </label>
                   <input
                     type="tel"
                     required
@@ -549,12 +588,12 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
                     {requestSubmitting ? (
                       <>
                         <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        <span>Broadcasting Alert...</span>
+                        <span>{isUrdu ? 'الرٹ نشر کیا جا رہا ہے...' : 'Broadcasting Alert...'}</span>
                       </>
                     ) : (
                       <>
                         <AlertTriangle className="w-4 h-4" />
-                        <span>Broadcast Emergency Request</span>
+                        <span>{isUrdu ? 'ہنگامی درخواست نشر کریں' : 'Broadcast Emergency Request'}</span>
                       </>
                     )}
                   </button>
@@ -577,7 +616,7 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
                 <div>
                   <h3 className="font-bold text-gray-900 text-sm">{chatModal.donor?.name}</h3>
                   <p className="text-[11px] text-gray-500">
-                    Blood Group {chatModal.donor?.blood_type} • {chatModal.donor?.city}
+                    {isUrdu ? `بلڈ گروپ ${chatModal.donor?.blood_type} • ${chatModal.donor?.city}` : `Blood Group ${chatModal.donor?.blood_type} • ${chatModal.donor?.city}`}
                   </p>
                 </div>
               </div>
@@ -614,14 +653,14 @@ export default function PatientDashboard({ currentUser, onNavigateHome }) {
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                placeholder="Type your message to donor..."
+                placeholder={isUrdu ? 'ڈونر کو اپنا پیغام لکھیں...' : 'Type your message to donor...'}
                 className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
               />
               <button
                 type="submit"
                 className="btn-medical text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-medical flex items-center gap-1.5 cursor-pointer"
               >
-                <span>Send</span>
+                <span>{isUrdu ? 'بھیجیں' : 'Send'}</span>
                 <Send className="w-3.5 h-3.5" />
               </button>
             </form>

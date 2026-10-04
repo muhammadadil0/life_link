@@ -3,8 +3,10 @@ import {
   ChevronLeft, ChevronRight, Heart, Search, MapPin, Droplets, 
   Activity, Users, Sparkles, CheckCircle2, ArrowRight
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function LargeHeroCarousel({ onNavigateRegister, onNavigateDonors, onOpenSos }) {
+  const { t, isUrdu } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -17,7 +19,12 @@ export default function LargeHeroCarousel({ onNavigateRegister, onNavigateDonors
 
   // Live activity alerts ticker
   const [activeAlertIndex, setActiveAlertIndex] = useState(0);
-  const liveAlerts = [
+  const liveAlerts = isUrdu ? [
+    { text: 'فوری ضرورت: سٹی ہسپتال میں O- خون درکار ہے', time: 'ابھی' },
+    { text: 'A+ بلڈ ایمرجنسی کیلئے تصدیق شدہ ڈونر دستیاب', time: '۲ منٹ قبل' },
+    { text: 'علاقائی نیٹ ورک میں نیا رضاکار ڈونر شامل', time: '۷ منٹ قبل' },
+    { text: 'ایمرجنسی مریض کیلئے B- خون کی بوتلیں روانہ', time: '۱۲ منٹ قبل' },
+  ] : [
     { text: 'Urgent: O- needed at City General Hospital', time: 'Just now' },
     { text: 'Verified donor matched for urgent A+ transfusion request', time: '2m ago' },
     { text: 'New volunteer blood donor verified in regional network', time: '7m ago' },
@@ -28,42 +35,42 @@ export default function LargeHeroCarousel({ onNavigateRegister, onNavigateDonors
     {
       id: 1,
       image: '/hero_slide_1.jpg',
-      badge: 'HEROES AMONG US',
+      badge: t('hero_badge_1', 'HEROES AMONG US'),
       badgeColor: 'bg-red-600/90 text-white',
-      title: 'Save Lives Today',
-      subtitle: 'One blood donation can save up to 3 lives. Be a hero for someone in need.',
-      stat: '1,250+ Active Donors Ready',
-      ctaText: 'Become a Donor'
+      title: t('hero_title_1', 'Save Lives Today'),
+      subtitle: t('hero_sub_1', 'One blood donation can save up to 3 lives. Be a hero for someone in need.'),
+      stat: t('hero_stat_1', '1,250+ Active Donors Ready'),
+      ctaText: t('hero_cta_1', 'Become a Donor')
     },
     {
       id: 2,
       image: '/hero_slide_2.jpg',
-      badge: 'RAPID EMERGENCY RESPONSE',
+      badge: t('hero_badge_2', 'RAPID EMERGENCY RESPONSE'),
       badgeColor: 'bg-emerald-600/90 text-white',
-      title: 'Connected in Minutes',
-      subtitle: 'Connecting families in distress with verified donors in your exact city.',
-      stat: '2.3 min Avg Match Time',
-      ctaText: 'Find Blood Urgently'
+      title: t('hero_title_2', 'Connected in Minutes'),
+      subtitle: t('hero_sub_2', 'Connecting families in distress with verified donors in your exact city.'),
+      stat: t('hero_stat_2', '2.3 min Avg Match Time'),
+      ctaText: t('hero_cta_2', 'Find Blood Urgently')
     },
     {
       id: 3,
       image: '/hero_slide_3.jpg',
-      badge: 'COMMUNITY MOVEMENT',
+      badge: t('hero_badge_3', 'COMMUNITY MOVEMENT'),
       badgeColor: 'bg-blue-600/90 text-white',
-      title: '18,000+ Lifesavers',
-      subtitle: 'A passionate nationwide network standing ready 24/7 for critical emergencies.',
-      stat: '98% Emergency Fulfillment',
-      ctaText: 'Join Our Community'
+      title: t('hero_title_3', '18,000+ Lifesavers'),
+      subtitle: t('hero_sub_3', 'A passionate nationwide network standing ready 24/7 for critical emergencies.'),
+      stat: t('hero_stat_3', '98% Emergency Fulfillment'),
+      ctaText: t('hero_cta_3', 'Join Our Community')
     },
     {
       id: 4,
       image: '/hero_slide_4.jpg',
-      badge: 'DIRECT LIFE CONNECTION',
+      badge: t('hero_badge_4', 'DIRECT LIFE CONNECTION'),
       badgeColor: 'bg-rose-600/90 text-white',
-      title: 'Every Drop Counts',
-      subtitle: 'Direct hospital dispatch and peer-to-peer blood donation without middlemen.',
-      stat: '2,840+ Lives Saved',
-      ctaText: 'Check Compatibility'
+      title: t('hero_title_4', 'Every Drop Counts'),
+      subtitle: t('hero_sub_4', 'Direct hospital dispatch and peer-to-peer blood donation without middlemen.'),
+      stat: t('hero_stat_4', '2,840+ Lives Saved'),
+      ctaText: t('hero_cta_4', 'Check Compatibility')
     }
   ];
 
@@ -308,20 +315,20 @@ export default function LargeHeroCarousel({ onNavigateRegister, onNavigateDonors
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
                 </span>
                 <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-red-600">
-                  Live Donor Radar & Hospital Finder
+                  {t('hero_search_title', 'Live Donor Radar & Hospital Finder')}
                 </span>
               </div>
               <h3 className="text-lg sm:text-2xl font-bold text-gray-900 font-display">
-                People Searching for Blood Right Now
+                {isUrdu ? 'اس وقت خون کے ضرورت مند افراد' : 'People Searching for Blood Right Now'}
               </h3>
               <p className="text-gray-500 text-xs sm:text-sm">
-                Select your blood group and city to scan available life-savers and active blood banks immediately.
+                {isUrdu ? 'قریبی دستیاب بلڈ ڈونرز اور ہسپتالوں کے بلڈ بینکس کو فوری اسکین کرنے کیلئے بلڈ گروپ اور شہر کا انتخاب کریں۔' : 'Select your blood group and city to scan available life-savers and active blood banks immediately.'}
               </p>
             </div>
 
             <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-red-50 border border-red-200 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-red-700 text-xs sm:text-sm font-semibold shadow-xs self-start md:self-auto">
               <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600" />
-              <span>1,250 Donors Online Near You</span>
+              <span>{isUrdu ? '۱۲۵۰+ ڈونرز آن لائن الرٹ' : '1,250 Donors Online Near You'}</span>
             </div>
           </div>
 
@@ -329,7 +336,7 @@ export default function LargeHeroCarousel({ onNavigateRegister, onNavigateDonors
           <form onSubmit={handleLiveSearch} className="space-y-3 sm:space-y-4">
             <div>
               <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1.5 sm:mb-2">
-                Select Blood Group Needed:
+                {t('hero_search_group', 'Select Blood Group Needed:')}
               </label>
               <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5 sm:gap-2">
                 {bloodTypes.map((type) => (
@@ -357,7 +364,7 @@ export default function LargeHeroCarousel({ onNavigateRegister, onNavigateDonors
                   type="text"
                   value={searchCity}
                   onChange={(e) => setSearchCity(e.target.value)}
-                  placeholder="Enter City or Hospital (e.g., Lahore, General Hospital)"
+                  placeholder={t('hero_search_city', 'Enter City or Hospital (e.g., Lahore, General Hospital)')}
                   className="w-full pl-10 pr-3 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl border border-gray-200 bg-white text-gray-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all shadow-xs"
                 />
               </div>
@@ -370,12 +377,12 @@ export default function LargeHeroCarousel({ onNavigateRegister, onNavigateDonors
                 {isSearching ? (
                   <>
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                    <span>Scanning Radar...</span>
+                    <span>{isUrdu ? 'ریڈار اسکین ہو رہا ہے...' : 'Scanning Radar...'}</span>
                   </>
                 ) : (
                   <>
                     <Search className="w-4 h-4" />
-                    <span>Scan For {searchBloodType} Donors</span>
+                    <span>{isUrdu ? `${searchBloodType} ڈونرز اسکین کریں` : `Scan For ${searchBloodType} Donors`}</span>
                   </>
                 )}
               </button>

@@ -27,13 +27,13 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!hospital.trim() || !contact.trim()) {
-      alert('Please provide the hospital name and contact number so donors can reach you.');
+      alert(isUrdu ? 'براہ کرم ہسپتال کا نام اور رابطہ نمبر درج کریں تاکہ ڈونرز رابطہ کر سکیں۔' : 'Please provide the hospital name and contact number so donors can reach you.');
       return;
     }
 
     setSubmitting(true);
     const payload = {
-      patient_name: patientName.trim() || `Emergency Patient (${bloodType})`,
+      patient_name: patientName.trim() || (isUrdu ? `ہنگامی مریض (${bloodType})` : `Emergency Patient (${bloodType})`),
       blood_type: bloodType,
       units_needed: unitsNeeded,
       urgency: urgency.includes('Immediate') ? 'Critical' : urgency.includes('6 Hours') ? 'High' : 'Moderate',
@@ -48,17 +48,17 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
     if (res.success) {
       setSuccessData(res.data);
     } else {
-      alert(res.message || 'Failed to broadcast SOS. Please call the emergency hotline directly: 03494996898');
+      alert(res.message || (isUrdu ? 'ایس او ایس بھیجنے میں خرابی۔ براہ کرم براہِ راست ہیلپ لائن 03494996898 پر کال کریں۔' : 'Failed to broadcast SOS. Please call the emergency hotline directly: 03494996898'));
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-fade-in">
+    <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-fade-in ${isUrdu ? 'font-urdu' : ''}`} dir={isUrdu ? 'rtl' : 'ltr'}>
       <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-red-100 relative max-h-[90vh] overflow-y-auto">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-5 top-5 p-1.5 text-gray-400 hover:text-gray-600 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer"
+          className={`absolute top-5 p-1.5 text-gray-400 hover:text-gray-600 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer ${isUrdu ? 'left-5' : 'right-5'}`}
         >
           <X className="w-5 h-5" />
         </button>
@@ -72,30 +72,40 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
 
             <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold mb-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-              <span>SOS Alert Broadcasted</span>
+              <span>{isUrdu ? 'ایس او ایس الرٹ جاری ہو گیا' : 'SOS Alert Broadcasted'}</span>
             </div>
 
             <h3 className="text-2xl font-bold font-display text-gray-900 mb-1">
-              Alert Broadcasted to Donors!
+              {isUrdu ? 'عطیہ دہندگان کو الرٹ جاری کر دیا گیا!' : 'Alert Broadcasted to Donors!'}
             </h3>
             <p className="text-gray-600 text-xs sm:text-sm max-w-sm mx-auto mb-6">
-              Verified <span className="font-bold text-red-600">{successData.blood_type}</span> donors in{' '}
-              <span className="font-semibold text-gray-900">{successData.city}</span> have received your priority alert for{' '}
-              <span className="font-semibold text-gray-900">{successData.hospital}</span>.
+              {isUrdu ? (
+                <>
+                  آپ کے شہر <span className="font-semibold text-gray-900">{successData.city}</span> میں{' '}
+                  <span className="font-bold text-red-600">{successData.blood_type}</span> کے تصدیق شدہ ڈونرز کو{' '}
+                  <span className="font-semibold text-gray-900">{successData.hospital}</span> کے لیے ترجیحی الرٹ بھیج دیا گیا ہے۔
+                </>
+              ) : (
+                <>
+                  Verified <span className="font-bold text-red-600">{successData.blood_type}</span> donors in{' '}
+                  <span className="font-semibold text-gray-900">{successData.city}</span> have received your priority alert for{' '}
+                  <span className="font-semibold text-gray-900">{successData.hospital}</span>.
+                </>
+              )}
             </p>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-gray-200 text-left text-xs space-y-1.5 mb-6">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-gray-200 text-left text-xs space-y-1.5 mb-6" dir={isUrdu ? 'rtl' : 'ltr'}>
               <div className="flex justify-between">
-                <span className="text-gray-500">Contact Number:</span>
+                <span className="text-gray-500">{isUrdu ? 'رابطہ نمبر:' : 'Contact Number:'}</span>
                 <span className="font-bold text-gray-900">{successData.contact}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Units Needed:</span>
-                <span className="font-bold text-gray-900">{successData.units_needed} Units ({successData.blood_type})</span>
+                <span className="text-gray-500">{isUrdu ? 'بوتلیں درکار ہیں:' : 'Units Needed:'}</span>
+                <span className="font-bold text-gray-900">{successData.units_needed} {isUrdu ? 'بوتلیں' : 'Units'} ({successData.blood_type})</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Response Team:</span>
-                <span className="font-bold text-emerald-600">Dispatched & Matching</span>
+                <span className="text-gray-500">{isUrdu ? 'امدادی ٹیم:' : 'Response Team:'}</span>
+                <span className="font-bold text-emerald-600">{isUrdu ? 'رابطہ اور تلاش جاری' : 'Dispatched & Matching'}</span>
               </div>
             </div>
 
@@ -103,7 +113,7 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
               <button
                 onClick={() => {
                   const text = `${t('wa_sos_header')}\n\n` +
-                    `${t('wa_patient')} ${successData.patient_name || 'Emergency Patient'}\n` +
+                    `${t('wa_patient')} ${successData.patient_name || (isUrdu ? 'ہنگامی مریض' : 'Emergency Patient')}\n` +
                     `${t('wa_blood_needed')} ${successData.blood_type}\n` +
                     `${t('wa_units')} ${successData.units_needed}\n` +
                     `${t('wa_hospital')} ${successData.hospital}, ${successData.city}\n` +
@@ -125,15 +135,15 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
                 }}
                 className="btn-medical text-white w-full py-3.5 rounded-xl font-bold text-xs shadow-medical flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Browse Matching Donors Directly</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>{isUrdu ? 'مطابق ڈونرز خود دیکھیں' : 'Browse Matching Donors Directly'}</span>
+                <ArrowRight className={`w-4 h-4 ${isUrdu ? 'rotate-180' : ''}`} />
               </button>
               <a
                 href={`tel:${successData.contact}`}
                 className="w-full py-2.5 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 text-xs font-semibold flex items-center justify-center gap-1.5"
               >
                 <Phone className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Call Emergency Dispatch: 03494996898</span>
+                <span>{isUrdu ? 'ہنگامی ہیلپ لائن: 03494996898' : 'Call Emergency Dispatch: 03494996898'}</span>
               </a>
             </div>
           </div>
@@ -144,13 +154,13 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
             <div className="text-center mb-6">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100/90 text-red-700 text-xs font-bold mb-2">
                 <HeartPulse className="w-3.5 h-3.5 text-red-600 animate-pulse" />
-                <span>10-Second Emergency SOS</span>
+                <span>{isUrdu ? '۱۰ سیکنڈ ایمرجنسی ایس او ایس' : '10-Second Emergency SOS'}</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-extrabold font-display text-gray-900 tracking-tight">
-                Request Urgent Blood
+                {isUrdu ? 'فوری خون کی درخواست کریں' : 'Request Urgent Blood'}
               </h2>
               <p className="text-xs text-gray-500 mt-1">
-                Zero sign-up required. Instantly broadcasts your hospital emergency to verified donors.
+                {isUrdu ? 'بغیر کسی اکاؤنٹ کے۔ ہسپتال ایمرجنسی الرٹ قریبی تصدیق شدہ ڈونرز تک فوری پہنچائیں۔' : 'Zero sign-up required. Instantly broadcasts your hospital emergency to verified donors.'}
               </p>
             </div>
 
@@ -158,7 +168,7 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
               {/* 1. Fast Blood Group Picker */}
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                  1. Tap Required Blood Group *
+                  {isUrdu ? '۱. مطلوبہ بلڈ گروپ منتخب کریں *' : '1. Tap Required Blood Group *'}
                 </label>
                 <div className="grid grid-cols-4 gap-2">
                   {bloodGroups.map((bg) => (
@@ -183,7 +193,7 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                    Units Needed
+                    {isUrdu ? 'کتنی بوتلیں درکار ہیں' : 'Units Needed'}
                   </label>
                   <div className="flex items-center gap-1.5">
                     {[1, 2, 3, 4].map((num) => (
@@ -205,16 +215,16 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
 
                 <div>
                   <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                    Urgency
+                    {isUrdu ? 'فوری ضرورت کی سطح' : 'Urgency'}
                   </label>
                   <select
                     value={urgency}
                     onChange={(e) => setUrgency(e.target.value)}
                     className="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                   >
-                    <option value="Immediate (ICU/Surgery)">Immediate (ICU / Surgery)</option>
-                    <option value="Within 6 Hours">Within 6 Hours</option>
-                    <option value="Today">Today</option>
+                    <option value="Immediate (ICU/Surgery)">{isUrdu ? 'انتہائی فوری (آئی سی یو / سرجری)' : 'Immediate (ICU / Surgery)'}</option>
+                    <option value="Within 6 Hours">{isUrdu ? '۶ گھنٹوں کے اندر' : 'Within 6 Hours'}</option>
+                    <option value="Today">{isUrdu ? 'آج کے دن میں' : 'Today'}</option>
                   </select>
                 </div>
               </div>
@@ -222,23 +232,23 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
               {/* 3. Hospital Name & City Quick Pick */}
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                  2. Hospital & Ward Location *
+                  {isUrdu ? '۲. ہسپتال اور وارڈ کی تفصیل *' : '2. Hospital & Ward Location *'}
                 </label>
                 <div className="relative mb-2">
-                  <MapPin className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <MapPin className={`w-4 h-4 text-gray-400 absolute top-1/2 -translate-y-1/2 ${isUrdu ? 'right-3' : 'left-3'}`} />
                   <input
                     type="text"
                     required
                     value={hospital}
                     onChange={(e) => setHospital(e.target.value)}
-                    placeholder="e.g., Mayo Hospital, ICU Emergency Ward 2"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-red-600"
+                    placeholder={isUrdu ? 'مثلاً میو ہسپتال، ایمرجنسی وارڈ ۲' : 'e.g., Mayo Hospital, ICU Emergency Ward 2'}
+                    className={`w-full py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-red-600 ${isUrdu ? 'pr-9 pl-3' : 'pl-9 pr-3'}`}
                   />
                 </div>
 
                 {/* Popular City Chips */}
                 <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
-                  <span className="text-[10px] text-gray-400 uppercase font-semibold flex-shrink-0">City:</span>
+                  <span className="text-[10px] text-gray-400 uppercase font-semibold flex-shrink-0">{isUrdu ? 'شہر:' : 'City:'}</span>
                   {popularCities.map((c) => (
                     <button
                       key={c}
@@ -260,30 +270,30 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                    Attendant Phone *
+                    {isUrdu ? 'تیماردار کا فون نمبر *' : 'Attendant Phone *'}
                   </label>
                   <div className="relative">
-                    <Phone className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Phone className={`w-4 h-4 text-gray-400 absolute top-1/2 -translate-y-1/2 ${isUrdu ? 'right-3' : 'left-3'}`} />
                     <input
                       type="tel"
                       required
                       value={contact}
                       onChange={(e) => setContact(e.target.value)}
-                      placeholder="e.g. 03494996898"
-                      className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-red-600"
+                      placeholder="03494996898"
+                      className={`w-full py-2.5 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-red-600 ${isUrdu ? 'pr-9 pl-3' : 'pl-9 pr-3'}`}
                     />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                    Patient Name (Optional)
+                    {isUrdu ? 'مریض کا نام (اختیاری)' : 'Patient Name (Optional)'}
                   </label>
                   <input
                     type="text"
                     value={patientName}
                     onChange={(e) => setPatientName(e.target.value)}
-                    placeholder="e.g., Patient Full Name"
+                    placeholder={isUrdu ? 'مریض کا مکمل نام' : 'e.g., Patient Full Name'}
                     className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-red-600"
                   />
                 </div>
@@ -299,17 +309,17 @@ export default function QuickSosModal({ isOpen, onClose, onViewDonors }) {
                   {submitting ? (
                     <>
                       <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Broadcasting to Nearby Donors...</span>
+                      <span>{isUrdu ? 'قریبی ڈونرز کو الرٹ جاری ہو رہا ہے...' : 'Broadcasting to Nearby Donors...'}</span>
                     </>
                   ) : (
                     <>
                       <AlertTriangle className="w-4 h-4" />
-                      <span>🚨 Broadcast Emergency SOS Now</span>
+                      <span>{isUrdu ? '🚨 فوری ایمرجنسی ایس او ایس الرٹ بھیجیں' : '🚨 Broadcast Emergency SOS Now'}</span>
                     </>
                   )}
                 </button>
                 <div className="text-center text-[10px] text-gray-400 mt-2">
-                  Emergency helpline: 03494996898 • Response coordinated within minutes
+                  {isUrdu ? 'ہنگامی ہیلپ لائن: 03494996898 • منٹوں میں رابطہ اور امداد' : 'Emergency helpline: 03494996898 • Response coordinated within minutes'}
                 </div>
               </div>
             </form>

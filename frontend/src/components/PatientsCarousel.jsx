@@ -3,8 +3,10 @@ import {
   ChevronLeft, ChevronRight, Heart, Activity, Shield, MapPin, 
   Phone, MessageCircle, AlertTriangle, Droplets, Sparkles 
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function PatientsCarousel({ patients = [] }) {
+  const { t, isUrdu } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef(null);
@@ -64,9 +66,11 @@ export default function PatientsCarousel({ patients = [] }) {
               <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-red-600/20 text-red-400 border border-red-500/30 flex items-center justify-center mx-auto mb-2">
                 <Heart className="w-7 h-7 sm:w-8 sm:h-8 fill-current" />
               </div>
-              <h2 className="text-xl sm:text-3xl font-extrabold font-display">LifeLink Emergency Network Active</h2>
+              <h2 className="text-xl sm:text-3xl font-extrabold font-display">
+                {t('pat_empty_title', 'LifeLink Emergency Network Active')}
+              </h2>
               <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
-                All recent emergency blood requests have verified donors responding. In case of an urgent need at any hospital, post an SOS alert immediately.
+                {t('pat_empty_desc', 'All recent emergency blood requests have verified donors responding. In case of an urgent need at any hospital, post an SOS alert immediately.')}
               </p>
             </div>
           </div>
@@ -86,15 +90,15 @@ export default function PatientsCarousel({ patients = [] }) {
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200 mb-1.5">
               <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
-              <span>LIVE HOSPITAL BROADCAST</span>
+              <span>{t('pat_carousel_badge', 'LIVE HOSPITAL BROADCAST')}</span>
             </div>
             <h2 className="text-xl sm:text-3xl font-extrabold text-gray-900 font-display">
-              Critical Patients Needing Blood
+              {t('pat_carousel_title', 'Critical Patients Needing Blood')}
             </h2>
           </div>
           <div className="text-xs text-gray-500 flex items-center gap-2">
-            <span>Case {currentIndex + 1} of {items.length}</span>
-            <span className="hidden sm:inline">• Auto-refreshing</span>
+            <span>{t('pat_case', 'Case')} {currentIndex + 1} {t('pat_of', 'of')} {items.length}</span>
+            <span className="hidden sm:inline">• {t('pat_autorefresh', 'Auto-refreshing')}</span>
           </div>
         </div>
 
@@ -157,7 +161,7 @@ export default function PatientsCarousel({ patients = [] }) {
                         : 'bg-orange-50 text-orange-700 border-orange-200'
                     }`}>
                       <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
-                      <span>{currentPatient.urgency || 'Critical'}</span>
+                      <span>{currentPatient.urgency === 'Critical' ? t('badge_critical', 'Critical') : t('badge_high', 'High Urgency')}</span>
                     </span>
                   </div>
 
@@ -169,8 +173,8 @@ export default function PatientsCarousel({ patients = [] }) {
                         {currentPatient.bloodType}
                       </div>
                       <div>
-                        <span className="text-[11px] text-gray-500 block uppercase font-semibold">Blood Type</span>
-                        <span className="font-bold text-gray-900">{currentPatient.bloodType} Required</span>
+                        <span className="text-[11px] text-gray-500 block uppercase font-semibold">{t('pat_needed', 'Required Group')}</span>
+                        <span className="font-bold text-gray-900">{currentPatient.bloodType}</span>
                       </div>
                     </div>
 
@@ -180,8 +184,8 @@ export default function PatientsCarousel({ patients = [] }) {
                         {currentPatient.units || '2'}
                       </div>
                       <div>
-                        <span className="text-[11px] text-gray-500 block uppercase font-semibold">Quantity</span>
-                        <span className="font-bold text-gray-900">{currentPatient.units || '2'} Unit(s) Needed</span>
+                        <span className="text-[11px] text-gray-500 block uppercase font-semibold">{t('pat_units', 'Units Needed')}</span>
+                        <span className="font-bold text-gray-900">{currentPatient.units || '2'} {t('badge_units', 'Units')}</span>
                       </div>
                     </div>
 
@@ -209,7 +213,7 @@ export default function PatientsCarousel({ patients = [] }) {
                       className="btn-medical text-white py-3 px-4 rounded-xl font-bold text-xs sm:text-sm shadow-medical flex items-center justify-center gap-2 transition-all active:scale-95"
                     >
                       <Phone className="w-4 h-4" />
-                      <span>Call Hospital / Family</span>
+                      <span>{t('btn_call_now', 'Call Hospital / Family')}</span>
                     </a>
 
                     <a
@@ -221,7 +225,7 @@ export default function PatientsCarousel({ patients = [] }) {
                       className="bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-4 rounded-xl font-bold text-xs sm:text-sm shadow-md flex items-center justify-center gap-2 transition-all active:scale-95"
                     >
                       <MessageCircle className="w-4 h-4" />
-                      <span>WhatsApp Coordinator</span>
+                      <span>{t('btn_whatsapp', 'WhatsApp Coordinator')}</span>
                     </a>
                   </div>
                 </div>

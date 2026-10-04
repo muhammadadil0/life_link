@@ -5,8 +5,10 @@ import {
 } from 'lucide-react';
 import { fetchDonors } from '../services/api';
 import LiveDonorMap from '../components/LiveDonorMap';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function DonorsPage({ currentUser, onNavigateRegister, onNavigateDonorPortal }) {
+  const { t, isUrdu } = useLanguage();
   const [donors, setDonors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedBlood, setSelectedBlood] = useState('all');
@@ -120,29 +122,40 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
         <div className="max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-red-100 text-red-700 px-4 py-1.5 rounded-full text-xs font-bold mb-4">
             <Users className="w-3.5 h-3.5 text-red-600" />
-            <span>Nationwide Lifesaver Registry</span>
+            <span>{isUrdu ? 'ملک گیر لائف سیور نیٹ ورک' : 'Nationwide Lifesaver Registry'}</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold font-display text-gray-900 tracking-tight mb-3">
-            Find Verified{' '}
-            <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
-              Blood Donors
-            </span>
+            {isUrdu ? (
+              <>
+                تلاش کریں{' '}
+                <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+                  تصدیق شدہ بلڈ ڈونرز
+                </span>
+              </>
+            ) : (
+              <>
+                Find Verified{' '}
+                <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+                  Blood Donors
+                </span>
+              </>
+            )}
           </h1>
 
           <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-6">
-            Search verified donors in your exact city and blood group. Connect directly by phone, hospital navigation, or chat.
+            {t('donors_subtitle', 'Connect directly with volunteer blood donors across Pakistan ready to save lives.')}
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 text-xs font-semibold text-gray-700">
             <div className="bg-slate-100 px-4 py-2 rounded-xl border border-gray-200">
-              <span className="text-red-600 font-bold">1,250+</span> Registered Donors
+              <span className="text-red-600 font-bold">1,250+</span> {isUrdu ? 'رجسٹرڈ ڈونرز' : 'Registered Donors'}
             </div>
             <div className="bg-slate-100 px-4 py-2 rounded-xl border border-gray-200">
-              <span className="text-emerald-600 font-bold">840+</span> Active Today
+              <span className="text-emerald-600 font-bold">840+</span> {isUrdu ? 'آج دستیاب' : 'Active Today'}
             </div>
             <div className="bg-slate-100 px-4 py-2 rounded-xl border border-gray-200">
-              <span className="text-blue-600 font-bold">2.3 min</span> Match Time
+              <span className="text-blue-600 font-bold">2.3 min</span> {isUrdu ? 'اوسط رابطہ وقت' : 'Match Time'}
             </div>
           </div>
         </div>
@@ -163,7 +176,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
                     : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                {bg === 'all' ? 'All Blood Types' : bg}
+                {bg === 'all' ? t('filter_all_blood', 'All Blood Types') : bg}
               </button>
             ))}
           </div>
@@ -180,7 +193,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
               }`}
             >
               <span className={`w-2 h-2 rounded-full ${availableOnly ? 'bg-emerald-500' : 'bg-gray-400'}`} />
-              <span>Available Only</span>
+              <span>{t('donors_available_only', 'Available Donors Only')}</span>
             </button>
 
             <form onSubmit={handleCitySearch} className="flex gap-2 w-full sm:w-auto">
@@ -190,7 +203,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
                   type="text"
                   value={searchCity}
                   onChange={(e) => setSearchCity(e.target.value)}
-                  placeholder="Filter city (e.g. Lahore)"
+                  placeholder={t('donors_city_placeholder', 'Filter city (e.g. Lahore, Mardan)')}
                   className="pl-9 pr-3 py-2 text-xs rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-600 w-full sm:w-52"
                 />
               </div>
@@ -198,7 +211,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
                 type="submit"
                 className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-gray-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
               >
-                Search
+                {t('btn_search', 'Search')}
               </button>
             </form>
           </div>
@@ -217,7 +230,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
               }`}
             >
               <Map className="w-4 h-4" />
-              <span>🗺️ Live Donor Radar Map</span>
+              <span>🗺️ {t('donors_view_map', 'Live Radar Map')}</span>
             </button>
 
             <button
@@ -230,7 +243,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
               }`}
             >
               <LayoutGrid className="w-4 h-4" />
-              <span>📋 Directory Cards ({donors.length})</span>
+              <span>📋 {t('donors_view_grid', 'Directory Cards')} ({donors.length})</span>
             </button>
           </div>
 
@@ -238,10 +251,10 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
             {viewMode === 'map' ? (
               <span className="inline-flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                <span>Tap any circular donor pin on the map to call or chat</span>
+                <span>{isUrdu ? 'نقشے پر کسی بھی ڈونر پر کلک کر کے رابطہ کریں' : 'Tap any circular donor pin on the map to call or chat'}</span>
               </span>
             ) : (
-              <span>Showing {donors.length} registered donors</span>
+              <span>{isUrdu ? `${donors.length} تصدیق شدہ ڈونرز` : `Showing ${donors.length} registered donors`}</span>
             )}
           </div>
         </div>
@@ -302,7 +315,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
                       </span>
                       <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600 font-semibold">
                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span>Ready to Donate</span>
+                        <span>{t('status_available', 'Ready to Donate')}</span>
                       </span>
                     </div>
                   </div>
@@ -318,8 +331,8 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
                     <span>{donor.phone || '03494996898'}</span>
                   </div>
                   <div className="flex items-center justify-between text-[11px] pt-1 border-t border-gray-200">
-                    <span>Age: {donor.age} yrs</span>
-                    <span className="text-emerald-700 font-medium">{donor.total_donations || 4} Donations Given</span>
+                    <span>{t('donors_age', 'Age')}: {donor.age} {isUrdu ? 'سال' : 'yrs'}</span>
+                    <span className="text-emerald-700 font-medium">{donor.total_donations || 4} {t('donors_total_donations', 'Donations Given')}</span>
                   </div>
                 </div>
               </div>
@@ -332,7 +345,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
                     className="py-2.5 px-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
                   >
                     <Phone className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Call Now</span>
+                    <span>{t('btn_call_now', 'Call Now')}</span>
                   </a>
 
                   <a
@@ -344,7 +357,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
                     className="py-2.5 px-2 rounded-xl bg-green-50 hover:bg-green-100 border border-green-200 text-green-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
                   >
                     <MessageCircle className="w-3.5 h-3.5 text-green-600" />
-                    <span>WhatsApp</span>
+                    <span>{t('btn_whatsapp', 'WhatsApp')}</span>
                   </a>
                 </div>
 
@@ -356,7 +369,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
                     className="py-2 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-gray-700 text-xs font-medium flex items-center justify-center gap-1 transition-colors"
                   >
                     <Navigation className="w-3.5 h-3.5 text-blue-600" />
-                    <span>Directions</span>
+                    <span>{t('btn_directions', 'Directions')}</span>
                   </a>
 
                   <button
@@ -364,7 +377,7 @@ export default function DonorsPage({ currentUser, onNavigateRegister, onNavigate
                     className="btn-medical text-white py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-medical cursor-pointer"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Portal Chat</span>
+                    <span>{t('btn_portal_chat', 'Portal Chat')}</span>
                   </button>
                 </div>
               </div>

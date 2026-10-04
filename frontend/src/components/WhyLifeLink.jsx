@@ -1,7 +1,10 @@
 import React from 'react';
 import { MessageSquareHeart } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function WhyLifeLink() {
+  const { t, isUrdu } = useLanguage();
+
   return (
     <section className="py-6 sm:py-12 px-3 sm:px-6">
       <div className="container mx-auto max-w-4xl">
@@ -16,26 +19,36 @@ export default function WhyLifeLink() {
               <MessageSquareHeart className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <h2 className="text-xl sm:text-3xl font-bold text-red-600 font-display">
-              Why LifeLink?
+              {t('why_title', 'Why LifeLink?')}
             </h2>
           </div>
 
-          {/* English Message */}
+          {/* Main Message */}
           <p className="text-gray-700 text-xs sm:text-lg leading-relaxed mb-4 sm:mb-6 font-light">
-            In urgent times, people often send messages in WhatsApp groups and social media, desperately searching for blood donors.{' '}
-            <span className="font-semibold text-red-600">LifeLink</span> makes this process easier, faster, and more reliable. With just a few clicks, you can connect with donors or patients in need—no more waiting, no more uncertainty.{' '}
-            <span className="font-semibold text-green-600">Save lives, spread hope, and be a hero in your community!</span>
+            {isUrdu ? (
+              <>
+                ایمرجنسی میں لوگ واٹس ایپ اور سوشل میڈیا پر پیغامات بھیجتے ہیں، خون کے عطیہ دہندگان کی تلاش میں۔{' '}
+                <span className="font-semibold text-red-600">LifeLink</span> اس عمل کو آسان، تیز اور قابلِ اعتماد بناتا ہے۔ صرف چند کلکس میں آپ ضرورت مند مریض یا عطیہ دہندگان سے جڑ سکتے ہیں—اب انتظار نہیں، اب بے یقینی نہیں۔{' '}
+                <span className="font-semibold text-emerald-600">زندگیاں بچائیں، امید پھیلائیں، اور اپنے معاشرے کے ہیرو بنیں!</span>
+              </>
+            ) : (
+              <>
+                In urgent times, people often send messages in WhatsApp groups and social media, desperately searching for blood donors.{' '}
+                <span className="font-semibold text-red-600">LifeLink</span> makes this process easier, faster, and more reliable. With just a few clicks, you can connect with donors or patients in need—no more waiting, no more uncertainty.{' '}
+                <span className="font-semibold text-emerald-600">Save lives, spread hope, and be a hero in your community!</span>
+              </>
+            )}
           </p>
 
-          {/* Urdu Message Box */}
-          <div className="p-4 sm:p-6 bg-red-50/80 rounded-xl sm:rounded-2xl border border-red-200 text-right">
-            <span className="block text-lg sm:text-xl font-bold text-red-700 font-display mb-1.5 sm:mb-2">
-              لائف لنک کیوں؟
+          {/* Bilingual Highlight Callout Box */}
+          <div className="p-4 sm:p-6 bg-red-50/80 rounded-xl sm:rounded-2xl border border-red-200">
+            <span className="block text-base sm:text-xl font-bold text-red-700 font-display mb-1.5 sm:mb-2">
+              {isUrdu ? '«اور جس نے ایک جان کو بچایا، گویا اس نے پوری انسانیت کو بچایا»' : 'Quran 5:32 — "Whoever saves one life, it is as if he had saved mankind entirely."'}
             </span>
-            <p className="text-gray-800 text-base sm:text-xl leading-relaxed sm:leading-loose font-urdu" dir="rtl">
-              ایمرجنسی میں لوگ واٹس ایپ اور گروپس میں پیغامات بھیجتے ہیں، خون کے عطیہ دہندگان کی تلاش میں۔{' '}
-              <span className="font-bold text-red-600">LifeLink</span> اس عمل کو آسان، تیز اور قابلِ اعتماد بناتا ہے۔ صرف چند کلکس میں آپ ضرورت مند مریض یا عطیہ دہندگان سے جڑ سکتے ہیں۔ اب انتظار نہیں، اب بے یقینی نہیں۔{' '}
-              <span className="font-bold text-green-600">زندگیاں بچائیں، امید پھیلائیں، اور اپنے معاشرے کے ہیرو بنیں!</span>
+            <p className="text-gray-800 text-xs sm:text-base leading-relaxed">
+              {isUrdu
+                ? 'خون کا عطیہ نہ صرف ایک طبی ضرورت ہے بلکہ ایک عظیم انسانی و دینی خدمت ہے۔ لائف لنک آپ کو اس نیک مقصد سے بلا واسطہ جوڑتا ہے۔'
+                : 'Blood donation is not only a medical necessity but a sublime humanitarian virtue. LifeLink directly connects you to save lives without delay.'}
             </p>
           </div>
         </div>

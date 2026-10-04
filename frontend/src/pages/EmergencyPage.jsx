@@ -137,7 +137,7 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
           {isDonor ? (
             <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 px-4 py-1.5 rounded-full text-xs font-bold mb-4 border border-emerald-200">
               <Heart className="w-3.5 h-3.5 fill-current text-emerald-600" />
-              <span>Volunteer Donor View ({currentUser.bloodGroup || 'Ready'})</span>
+              <span>{isUrdu ? `رضاکار ڈونر ویو (${currentUser.bloodGroup || 'تیار'})` : `Volunteer Donor View (${currentUser.bloodGroup || 'Ready'})`}</span>
             </div>
           ) : (
             <div className="w-16 h-16 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-4 shadow-sm">
@@ -148,16 +148,16 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
           <h1 className="text-3xl sm:text-5xl font-extrabold font-display text-gray-900 tracking-tight mb-3">
             {isDonor ? (
               <>
-                Patients In Need of{' '}
+                {isUrdu ? 'خون کے ضرورت مند ' : 'Patients In Need of '}
                 <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
-                  Blood Transfusions
+                  {isUrdu ? 'مریض' : 'Blood Transfusions'}
                 </span>
               </>
             ) : (
               <>
-                Emergency{' '}
+                {isUrdu ? 'خون کی ' : 'Emergency '}
                 <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
-                  Blood Requests
+                  {isUrdu ? 'ہنگامی درخواستیں' : 'Blood Requests'}
                 </span>
               </>
             )}
@@ -165,12 +165,18 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
 
           <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-6">
             {isDonor
-              ? `Review patients in intensive care needing urgent blood. Cases matching your blood group (${currentUser.bloodGroup || 'all'}) are highlighted for your response.`
-              : 'Urgent blood transfusion calls verified across intensive care units and hospitals nationwide. Every second counts.'}
+              ? (isUrdu 
+                  ? `آئی سی یو اور ایمرجنسی وارڈز میں زیرِ علاج مریض جنہیں فوری خون درکار ہے۔ آپ کے بلڈ گروپ (${currentUser.bloodGroup || 'تمام'}) کے مطابق کیسز نمایاں ہیں۔`
+                  : `Review patients in intensive care needing urgent blood. Cases matching your blood group (${currentUser.bloodGroup || 'all'}) are highlighted for your response.`)
+              : (isUrdu 
+                  ? 'ملک بھر کے ہسپتالوں اور انتہائی نگہداشت کے شعبوں کی تصدیق شدہ ایمرجنسی کالز۔ ہر سیکنڈ قیمتی ہے۔' 
+                  : 'Urgent blood transfusion calls verified across intensive care units and hospitals nationwide. Every second counts.')}
           </p>
 
           <div className="italic text-sm sm:text-base text-red-600 font-semibold mb-6">
-            "A single drop can save a life. Be the reason for someone's tomorrow."
+            {isUrdu 
+              ? '«خون کا ایک قطرہ کسی کی جان بچا سکتا ہے، کسی کی مسکراہٹ کی وجہ بنیں۔»' 
+              : '"A single drop can save a life. Be the reason for someone\'s tomorrow."'}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
@@ -182,7 +188,7 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
                     className="btn-medical text-white px-7 py-3.5 rounded-2xl font-bold text-sm shadow-medical flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
                   >
                     <Droplets className="w-4 h-4 fill-current" />
-                    <span>Filter My Blood Group ({currentUser.bloodGroup})</span>
+                    <span>{isUrdu ? `میرا بلڈ گروپ فلٹر کریں (${currentUser.bloodGroup})` : `Filter My Blood Group (${currentUser.bloodGroup})`}</span>
                   </button>
                 )}
                 {onNavigateDonorPortal && (
@@ -191,7 +197,7 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
                     className="bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 px-6 py-3.5 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
                   >
                     <Heart className="w-4 h-4 text-emerald-600 fill-current" />
-                    <span>My Donor Portal</span>
+                    <span>{isUrdu ? 'میرا ڈونر پورٹل' : 'My Donor Portal'}</span>
                   </button>
                 )}
               </>
@@ -201,7 +207,7 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
                 className="btn-medical text-white px-8 py-3.5 rounded-2xl font-bold text-sm shadow-medical flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
               >
                 <Plus className="w-4 h-4" />
-                <span>Post Emergency Request</span>
+                <span>{isUrdu ? 'خون کی ہنگامی درخواست پوسٹ کریں' : 'Post Emergency Request'}</span>
               </button>
             )}
             <a
@@ -209,7 +215,7 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
               className="bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 px-6 py-3.5 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
             >
               <Phone className="w-4 h-4 text-red-600" />
-              <span>24/7 Hotline: 03494996898</span>
+              <span>{isUrdu ? '۲۴/۷ ہاٹ لائن: 03494996898' : '24/7 Hotline: 03494996898'}</span>
             </a>
           </div>
         </div>
@@ -229,7 +235,7 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
                   : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
               }`}
             >
-              {bg === 'all' ? 'All Blood Groups' : bg}
+              {bg === 'all' ? (isUrdu ? 'تمام بلڈ گروپس' : 'All Blood Groups') : bg}
             </button>
           ))}
         </div>
@@ -242,7 +248,7 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
               type="text"
               value={searchCity}
               onChange={(e) => setSearchCity(e.target.value)}
-              placeholder="Search by city (e.g. Lahore)"
+              placeholder={isUrdu ? 'شہر تلاش کریں (مثلاً لاہور، مردان)' : 'Search by city (e.g. Lahore)'}
               className="pl-9 pr-3 py-2 text-xs rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-600 w-44 sm:w-56"
             />
           </div>
@@ -250,7 +256,7 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
             type="submit"
             className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-gray-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
           >
-            Filter
+            {isUrdu ? 'فلٹر کریں' : 'Filter'}
           </button>
         </form>
       </div>
@@ -259,13 +265,13 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
       {loading ? (
         <div className="text-center py-16">
           <div className="w-8 h-8 border-3 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-gray-500 text-sm">Loading urgent requests...</p>
+          <p className="text-gray-500 text-sm">{isUrdu ? 'ہنگامی درخواستیں لوڈ ہو رہی ہیں...' : 'Loading urgent requests...'}</p>
         </div>
       ) : requests.length === 0 ? (
         <div className="glass-card bg-white p-12 text-center rounded-3xl border border-gray-200">
           <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-gray-800">No Emergency Calls Currently</h3>
-          <p className="text-gray-500 text-xs mt-1">There are no urgent blood requests matching your active filter.</p>
+          <h3 className="text-lg font-bold text-gray-800">{isUrdu ? 'اس وقت کوئی ہنگامی کال نہیں ہے' : 'No Emergency Calls Currently'}</h3>
+          <p className="text-gray-500 text-xs mt-1">{isUrdu ? 'آپ کے منتخب کردہ فلٹر کے مطابق کوئی ہنگامی درخواست نہیں ملی۔' : 'There are no urgent blood requests matching your active filter.'}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
@@ -290,24 +296,26 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
                       ? 'bg-amber-100 text-amber-700 border border-amber-200'
                       : 'bg-blue-100 text-blue-700 border border-blue-200'
                   }`}>
-                    {req.urgency}
+                    {isUrdu
+                      ? (req.urgency === 'Critical' ? 'انتہائی نازک' : req.urgency === 'High' ? 'اہم (فوری)' : 'معمول')
+                      : req.urgency}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-slate-50 border border-gray-100 text-xs mb-5">
                   <div>
-                    <span className="text-gray-500 block">Required Group:</span>
+                    <span className="text-gray-500 block">{isUrdu ? 'مطلوبہ گروپ:' : 'Required Group:'}</span>
                     <span className="font-bold text-red-600 text-sm flex items-center gap-1">
                       <Droplets className="w-3.5 h-3.5" />
                       {req.blood_type}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-500 block">Units Needed:</span>
-                    <span className="font-bold text-gray-800 text-sm">{req.units_needed} Units</span>
+                    <span className="text-gray-500 block">{isUrdu ? 'کتنی بوتلیں درکار ہیں:' : 'Units Needed:'}</span>
+                    <span className="font-bold text-gray-800 text-sm">{req.units_needed} {isUrdu ? 'بوتلیں' : 'Units'}</span>
                   </div>
                   <div className="col-span-2">
-                    <span className="text-gray-500 block">Emergency Contact:</span>
+                    <span className="text-gray-500 block">{isUrdu ? 'ہنگامی رابطہ:' : 'Emergency Contact:'}</span>
                     <span className="font-bold text-gray-800">{req.contact || '03494996898'}</span>
                   </div>
                 </div>
@@ -369,33 +377,33 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
               <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
                 <AlertTriangle className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold font-display text-gray-900">Post Emergency Blood Request</h3>
-              <p className="text-xs text-gray-500 mt-1">Broadcasts an urgent alert to donors across our network</p>
+              <h3 className="text-2xl font-bold font-display text-gray-900">{isUrdu ? 'ہنگامی خون کی درخواست پوسٹ کریں' : 'Post Emergency Blood Request'}</h3>
+              <p className="text-xs text-gray-500 mt-1">{isUrdu ? 'ہمارے پورے نیٹ ورک میں عطیہ دہندگان کو فوری الرٹ جاری کریں' : 'Broadcasts an urgent alert to donors across our network'}</p>
             </div>
 
             {createSuccess ? (
               <div className="py-8 text-center animate-fade-in">
                 <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto mb-3" />
-                <h4 className="text-xl font-bold text-gray-900">Emergency Alert Published!</h4>
-                <p className="text-xs text-gray-600 mt-1">Donors in your city are being notified right away.</p>
+                <h4 className="text-xl font-bold text-gray-900">{isUrdu ? 'ہنگامی الرٹ جاری کر دیا گیا!' : 'Emergency Alert Published!'}</h4>
+                <p className="text-xs text-gray-600 mt-1">{isUrdu ? 'آپ کے شہر میں عطیہ دہندگان کو فوری طور پر مطلع کیا جا رہا ہے۔' : 'Donors in your city are being notified right away.'}</p>
               </div>
             ) : (
               <form onSubmit={handleCreateSubmit} className="space-y-3.5 text-xs">
                 <div>
-                  <label className="block font-semibold text-gray-700 uppercase mb-1">Patient Name *</label>
+                  <label className="block font-semibold text-gray-700 uppercase mb-1">{isUrdu ? 'مریض کا نام *' : 'Patient Name *'}</label>
                   <input
                     type="text"
                     required
                     value={formData.patient_name}
                     onChange={(e) => setFormData({ ...formData, patient_name: e.target.value })}
-                    placeholder="e.g., Patient Full Name"
+                    placeholder={isUrdu ? 'مثال کے طور پر: محمد عادل' : 'e.g., Patient Full Name'}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-semibold text-gray-700 uppercase mb-1">Blood Group *</label>
+                    <label className="block font-semibold text-gray-700 uppercase mb-1">{isUrdu ? 'خون کا گروپ *' : 'Blood Group *'}</label>
                     <select
                       value={formData.blood_type}
                       onChange={(e) => setFormData({ ...formData, blood_type: e.target.value })}
@@ -408,7 +416,7 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-gray-700 uppercase mb-1">Units Needed *</label>
+                    <label className="block font-semibold text-gray-700 uppercase mb-1">{isUrdu ? 'کتنی بوتلیں درکار ہیں *' : 'Units Needed *'}</label>
                     <input
                       type="number"
                       min="1"
@@ -423,51 +431,51 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-semibold text-gray-700 uppercase mb-1">Urgency Level *</label>
+                    <label className="block font-semibold text-gray-700 uppercase mb-1">{isUrdu ? 'فوری ضرورت کی سطح *' : 'Urgency Level *'}</label>
                     <select
                       value={formData.urgency}
                       onChange={(e) => setFormData({ ...formData, urgency: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                     >
-                      <option value="Critical">Critical (Immediate)</option>
-                      <option value="High">High (Within 6 hrs)</option>
-                      <option value="Moderate">Moderate (Today)</option>
+                      <option value="Critical">{isUrdu ? 'انتہائی نازک (فوری)' : 'Critical (Immediate)'}</option>
+                      <option value="High">{isUrdu ? 'اہم (۶ گھنٹوں کے اندر)' : 'High (Within 6 hrs)'}</option>
+                      <option value="Moderate">{isUrdu ? 'معمول (آج کے دن میں)' : 'Moderate (Today)'}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-gray-700 uppercase mb-1">City *</label>
+                    <label className="block font-semibold text-gray-700 uppercase mb-1">{isUrdu ? 'شہر *' : 'City *'}</label>
                     <input
                       type="text"
                       required
                       value={formData.city}
                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                      placeholder="e.g. Lahore"
+                      placeholder={isUrdu ? 'مثلاً لاہور، مردان' : 'e.g. Lahore'}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-gray-700 uppercase mb-1">Hospital & Ward *</label>
+                  <label className="block font-semibold text-gray-700 uppercase mb-1">{isUrdu ? 'ہسپتال اور وارڈ نمبر *' : 'Hospital & Ward *'}</label>
                   <input
                     type="text"
                     required
                     value={formData.hospital}
                     onChange={(e) => setFormData({ ...formData, hospital: e.target.value })}
-                    placeholder="e.g. City General Hospital, ICU Ward 2"
+                    placeholder={isUrdu ? 'مثلاً جناح ہسپتال، آئی سی یو وارڈ' : 'e.g. City General Hospital, ICU Ward 2'}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-gray-700 uppercase mb-1">Contact Phone *</label>
+                  <label className="block font-semibold text-gray-700 uppercase mb-1">{isUrdu ? 'رابطہ نمبر *' : 'Contact Phone *'}</label>
                   <input
                     type="tel"
                     required
                     value={formData.contact}
                     onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                    placeholder="e.g., 03494996898"
+                    placeholder="03494996898"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                   />
                 </div>
@@ -481,12 +489,12 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
                     {submitting ? (
                       <>
                         <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        <span>Publishing Alert...</span>
+                        <span>{isUrdu ? 'الرٹ جاری ہو رہا ہے...' : 'Publishing Alert...'}</span>
                       </>
                     ) : (
                       <>
                         <AlertTriangle className="w-4 h-4" />
-                        <span>Submit Emergency Request</span>
+                        <span>{isUrdu ? 'ہنگامی درخواست جمع کروائیں' : 'Submit Emergency Request'}</span>
                       </>
                     )}
                   </button>
@@ -509,7 +517,7 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
                 <div>
                   <h3 className="font-bold text-gray-900 text-sm">{chatModal.req?.patient_name}</h3>
                   <p className="text-[11px] text-gray-500">
-                    {chatModal.req?.hospital} • Blood Group {chatModal.req?.blood_type}
+                    {chatModal.req?.hospital} • {isUrdu ? 'بلڈ گروپ' : 'Blood Group'} {chatModal.req?.blood_type}
                   </p>
                 </div>
               </div>
@@ -546,14 +554,14 @@ export default function EmergencyPage({ currentUser, onNavigateHome, onNavigateD
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                placeholder="Type your message to patient..."
+                placeholder={isUrdu ? 'مریض کو پیغام لکھیں...' : 'Type your message to patient...'}
                 className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
               />
               <button
                 type="submit"
                 className="btn-medical text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-medical flex items-center gap-1.5 cursor-pointer"
               >
-                <span>Send</span>
+                <span>{isUrdu ? 'بھیجیں' : 'Send'}</span>
                 <Send className="w-3.5 h-3.5" />
               </button>
             </form>

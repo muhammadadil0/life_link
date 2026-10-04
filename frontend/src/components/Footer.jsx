@@ -3,8 +3,10 @@ import {
   Heart, Phone, Mail, Clock, Github, Linkedin, ArrowUp, 
   MapPin, Droplets, Send, CheckCircle2, ChevronRight
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Footer({ onNavigate }) {
+  const { t, isUrdu } = useLanguage();
   const [subscribed, setSubscribed] = useState(false);
   const [emailInput, setEmailInput] = useState('');
 
@@ -41,10 +43,10 @@ export default function Footer({ onNavigate }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7">
               <h2 className="text-2xl sm:text-3xl font-extrabold font-display tracking-tight text-gray-900 mb-2">
-                Be The First To Know When A Life Is In Need
+                {t('footer_news_title', 'Be The First To Know When A Life Is In Need')}
               </h2>
               <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                Subscribe for instant urgent blood donor calls in your hospital area. Zero spam, 100% life-saving priority alerts.
+                {t('footer_news_desc', 'Subscribe for instant urgent blood donor calls in your hospital area. Zero spam, 100% life-saving priority alerts.')}
               </p>
             </div>
 
@@ -57,16 +59,16 @@ export default function Footer({ onNavigate }) {
                       type="email"
                       value={emailInput}
                       onChange={(e) => setEmailInput(e.target.value)}
-                      placeholder="Enter your email address"
+                      placeholder={t('footer_news_placeholder', 'Enter your email address')}
                       required
                       className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-slate-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-600 focus:bg-white transition-all"
                     />
                   </div>
                   <button
                     type="submit"
-                    className="bg-red-600 hover:bg-red-700 text-white font-semibold text-sm px-6 py-3.5 rounded-2xl shadow-md flex items-center justify-center gap-2 whitespace-nowrap transition-all group"
+                    className="bg-red-600 hover:bg-red-700 text-white font-semibold text-sm px-6 py-3.5 rounded-2xl shadow-md flex items-center justify-center gap-2 whitespace-nowrap transition-all group cursor-pointer"
                   >
-                    <span>Subscribe</span>
+                    <span>{t('footer_news_btn', 'Subscribe')}</span>
                     <Send className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </button>
                 </div>
@@ -74,11 +76,11 @@ export default function Footer({ onNavigate }) {
                 {subscribed ? (
                   <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
                     <CheckCircle2 className="w-4 h-4" />
-                    <span>You are enrolled in emergency community notifications!</span>
+                    <span>{t('footer_news_success', 'You are enrolled in emergency community notifications!')}</span>
                   </div>
                 ) : (
                   <p className="text-[11px] text-gray-400">
-                    End-to-end encrypted • Unsubscribe anytime
+                    {isUrdu ? 'محفوظ و نجی ڈیٹا • کسی بھی وقت ان سبسکرائب کریں' : 'End-to-end encrypted • Unsubscribe anytime'}
                   </p>
                 )}
               </form>
@@ -91,9 +93,9 @@ export default function Footer({ onNavigate }) {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-red-600">
               <Droplets className="w-4 h-4 text-red-600" />
-              <span>Blood Group Quick Reference Matrix</span>
+              <span>{t('footer_compat_title', 'Blood Group Quick Reference Matrix')}</span>
             </div>
-            <span className="text-xs text-gray-500 font-medium">Click any blood group to jump to donor search</span>
+            <span className="text-xs text-gray-500 font-medium">{t('footer_compat_sub', 'Click any blood group to jump to donor search')}</span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
@@ -127,13 +129,13 @@ export default function Footer({ onNavigate }) {
                   LifeLink
                 </span>
                 <div className="text-xs text-red-600 font-semibold tracking-wider uppercase">
-                  National Blood Network
+                  {t('brand_sub', 'National Blood Network')}
                 </div>
               </div>
             </div>
 
             <p className="text-gray-600 leading-relaxed text-sm font-light max-w-md">
-              Connecting altruistic blood donors with patients in critical emergency need. Driven by compassionate technology, real-time hospital dispatch, and community heroism.
+              {t('footer_about_desc', "Pakistan's premier rapid-response emergency blood donation network connecting patients directly with verified volunteer donors.")}
             </p>
 
             {/* Social Profile Links */}
@@ -162,7 +164,7 @@ export default function Footer({ onNavigate }) {
           {/* Column 2: Quick Links */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 mb-5">
-              Explore Platform
+              {t('footer_quick_links', 'Explore Platform')}
             </h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
@@ -171,7 +173,7 @@ export default function Footer({ onNavigate }) {
                   className="hover:text-red-600 transition-colors flex items-center gap-1.5 group cursor-pointer text-left"
                 >
                   <ChevronRight className="w-3.5 h-3.5 text-red-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  <span>Home Overview</span>
+                  <span>{t('nav_home', 'Home Overview')}</span>
                 </button>
               </li>
               <li>
@@ -180,7 +182,7 @@ export default function Footer({ onNavigate }) {
                   className="hover:text-red-600 transition-colors flex items-center gap-1.5 group cursor-pointer text-left"
                 >
                   <ChevronRight className="w-3.5 h-3.5 text-red-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  <span>Emergency Requests</span>
+                  <span>{t('nav_emergency', 'Emergency Requests')}</span>
                   <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">LIVE</span>
                 </button>
               </li>
@@ -190,7 +192,7 @@ export default function Footer({ onNavigate }) {
                   className="hover:text-red-600 transition-colors flex items-center gap-1.5 group cursor-pointer text-left"
                 >
                   <ChevronRight className="w-3.5 h-3.5 text-red-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  <span>Find Donors</span>
+                  <span>{t('nav_find_donors', 'Find Donors')}</span>
                 </button>
               </li>
               <li>
@@ -199,7 +201,7 @@ export default function Footer({ onNavigate }) {
                   className="hover:text-red-600 transition-colors flex items-center gap-1.5 group cursor-pointer text-left"
                 >
                   <ChevronRight className="w-3.5 h-3.5 text-red-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  <span>Contact Us</span>
+                  <span>{t('nav_contact', 'Contact Us')}</span>
                 </button>
               </li>
               <li>
@@ -208,7 +210,7 @@ export default function Footer({ onNavigate }) {
                   className="hover:text-red-600 transition-colors flex items-center gap-1.5 group cursor-pointer text-left font-semibold text-red-600"
                 >
                   <ChevronRight className="w-3.5 h-3.5 text-red-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  <span>Become a LifeSaver</span>
+                  <span>{t('hero_cta_1', 'Become a LifeSaver')}</span>
                 </button>
               </li>
             </ul>
@@ -217,53 +219,47 @@ export default function Footer({ onNavigate }) {
           {/* Column 3: Medical Guidelines */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 mb-5">
-              Guidelines & Legal
+              {isUrdu ? 'ہدایات و ضوابط' : 'Guidelines & Legal'}
             </h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
                 <a href="#" className="hover:text-red-600 transition-colors flex items-center gap-1.5 group">
                   <ChevronRight className="w-3.5 h-3.5 text-red-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  <span>Donor Eligibility Criteria</span>
+                  <span>{isUrdu ? 'ڈونر اہلیت کے معیارات' : 'Donor Eligibility Criteria'}</span>
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-red-600 transition-colors flex items-center gap-1.5 group">
                   <ChevronRight className="w-3.5 h-3.5 text-red-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  <span>Blood Safety Protocols</span>
+                  <span>{isUrdu ? 'خون کی حفاظت کے پروٹوکولز' : 'Blood Safety Protocols'}</span>
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-red-600 transition-colors flex items-center gap-1.5 group">
                   <ChevronRight className="w-3.5 h-3.5 text-red-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  <span>Hospital Partner Network</span>
+                  <span>{isUrdu ? 'ہسپتال پارٹنر نیٹ ورک' : 'Hospital Partner Network'}</span>
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-red-600 transition-colors flex items-center gap-1.5 group">
                   <ChevronRight className="w-3.5 h-3.5 text-red-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  <span>Privacy Policy</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-red-600 transition-colors flex items-center gap-1.5 group">
-                  <ChevronRight className="w-3.5 h-3.5 text-red-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  <span>Terms of Healthcare</span>
+                  <span>{isUrdu ? 'پرائیویسی پالیسی' : 'Privacy Policy'}</span>
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Column 4: Emergency Response (Clean, not awkwardly rounded) */}
+          {/* Column 4: Emergency Response */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 mb-5">
-              Emergency Response
+              {isUrdu ? 'ہنگامی ردعمل سنٹر' : 'Emergency Response'}
             </h3>
 
             <div className="space-y-3.5 text-sm text-gray-600">
               {/* Direct Hotline Link */}
               <div>
                 <div className="text-xs text-red-600 font-semibold uppercase tracking-wider mb-1">
-                  24/7 Rapid Hotline
+                  {isUrdu ? '۲۴/۷ ترجیحی ہیلپ لائن' : '24/7 Rapid Hotline'}
                 </div>
                 <a
                   href="tel:03494996898"
@@ -288,13 +284,13 @@ export default function Footer({ onNavigate }) {
               {/* Hours */}
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Clock className="w-4 h-4 text-red-600 flex-shrink-0" />
-                <span>24/7/365 Non-stop Operations</span>
+                <span>{isUrdu ? '۲۴ گھنٹے بلا تعطل خدمات' : '24/7/365 Non-stop Operations'}</span>
               </div>
 
               {/* Coverage / Operations */}
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <MapPin className="w-4 h-4 text-red-600 flex-shrink-0" />
-                <span>Shergarh, Mardan (Nationwide Network)</span>
+                <span>{isUrdu ? 'شیرگڑھ، مردان (ملک گیر نیٹ ورک)' : 'Shergarh, Mardan (Nationwide Network)'}</span>
               </div>
             </div>
           </div>
@@ -303,14 +299,14 @@ export default function Footer({ onNavigate }) {
         {/* 🌟 BOTTOM BAR */}
         <div className="pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
           <p>
-            &copy; {new Date().getFullYear()} <span className="font-semibold text-gray-800">LifeLink Blood Bank</span>. Built with compassion by <span className="font-medium text-gray-900">Muhammad Adil</span>.
+            &copy; {new Date().getFullYear()} <span className="font-semibold text-gray-800">LifeLink Blood Bank</span>. {isUrdu ? 'جملہ حقوق محفوظ ہیں۔ از محمد عادل' : 'Built with compassion by Muhammad Adil.'}
           </p>
 
           <div className="flex items-center gap-4">
-            <span className="text-gray-500 hidden sm:inline">Saving lives one drop at a time</span>
+            <span className="text-gray-500 hidden sm:inline">{isUrdu ? 'ایک قطرہ، ایک نئی زندگی' : 'Saving lives one drop at a time'}</span>
             <button
               onClick={scrollToTop}
-              className="p-2.5 rounded-xl bg-white hover:bg-red-600 border border-gray-200 hover:border-red-600 text-gray-600 hover:text-white shadow-sm transition-all duration-300 hover:scale-105 flex items-center justify-center font-bold"
+              className="p-2.5 rounded-xl bg-white hover:bg-red-600 border border-gray-200 hover:border-red-600 text-gray-600 hover:text-white shadow-sm transition-all duration-300 hover:scale-105 flex items-center justify-center font-bold cursor-pointer"
               aria-label="Back to top"
             >
               <ArrowUp className="w-4 h-4" />

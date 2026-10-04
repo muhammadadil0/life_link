@@ -225,7 +225,11 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
                     <span className={`text-[10px] font-bold uppercase tracking-wider block ${
                       isDonor ? 'text-emerald-700' : 'text-red-600'
                     }`}>
-                      {isDonor ? `Donor • ${currentUser.bloodGroup || 'Ready'}` : isPatient ? `Patient • ${currentUser.bloodGroup || 'Needed'}` : 'Admin'}
+                      {isDonor 
+                        ? (isUrdu ? `ڈونر • ${currentUser.bloodGroup || 'تیار'}` : `Donor • ${currentUser.bloodGroup || 'Ready'}`) 
+                        : isPatient 
+                        ? (isUrdu ? `مریض • ${currentUser.bloodGroup || 'درکار'}` : `Patient • ${currentUser.bloodGroup || 'Needed'}`) 
+                        : (isUrdu ? 'ایڈمن' : 'Admin')}
                     </span>
                   </div>
 

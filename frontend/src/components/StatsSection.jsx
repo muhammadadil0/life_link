@@ -1,33 +1,36 @@
 import React from 'react';
 import { HeartPulse, Clock, Users, HeartHandshake } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function StatsSection({ stats = {} }) {
+  const { t } = useLanguage();
+
   const cards = [
     {
-      title: 'Success Rate',
+      title: t('stat_success_rate', 'Success Rate'),
       value: stats.successRate || '98%',
-      subtitle: 'Critical requests fulfilled',
+      subtitle: t('stat_success_sub', 'Critical requests fulfilled'),
       icon: HeartPulse,
       iconBg: 'bg-red-100 text-red-600'
     },
     {
-      title: 'Emergency Support',
+      title: t('stat_emergency_support', 'Emergency Support'),
       value: stats.emergencySupport || '24/7',
-      subtitle: 'Always available team',
+      subtitle: t('stat_emergency_sub', 'Always available team'),
       icon: Clock,
       iconBg: 'bg-amber-100 text-amber-600'
     },
     {
-      title: 'Active Donors',
+      title: t('stat_active_donors', 'Active Donors'),
       value: stats.activeDonors ? `${stats.activeDonors.toLocaleString()}+` : '1,250+',
-      subtitle: 'Verified life-savers',
+      subtitle: t('stat_active_sub', 'Verified life-savers'),
       icon: Users,
       iconBg: 'bg-blue-100 text-blue-600'
     },
     {
-      title: 'Lives Saved',
+      title: t('stat_lives_saved', 'Lives Saved'),
       value: stats.livesSaved ? `${stats.livesSaved.toLocaleString()}+` : '2,840+',
-      subtitle: 'Community impact',
+      subtitle: t('stat_lives_sub', 'Community impact'),
       icon: HeartHandshake,
       iconBg: 'bg-emerald-100 text-emerald-600'
     }
@@ -38,10 +41,10 @@ export default function StatsSection({ stats = {} }) {
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-6 sm:mb-12">
           <h2 className="text-2xl md:text-4xl font-bold text-gray-900 font-display mb-1.5 sm:mb-3">
-            Our Impact
+            {t('stats_title', 'Our Impact')}
           </h2>
           <p className="text-gray-600 text-xs sm:text-base max-w-xl mx-auto">
-            Empowering communities and giving patients the emergency support they need when every second counts.
+            {t('stats_subtitle', 'Empowering communities and giving patients the emergency support they need when every second counts.')}
           </p>
         </div>
 

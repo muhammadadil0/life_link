@@ -5,8 +5,10 @@ import {
   AlertCircle, Sparkles, Navigation, Zap, Plus, Minus, AlertTriangle
 } from 'lucide-react';
 import { registerUser, detectIpLocation, reverseGeocode, createEmergencyRequest } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Register({ onNavigateHome, onNavigateLogin }) {
+  const { t, isUrdu } = useLanguage();
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 4;
 
@@ -341,41 +343,47 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
 
           <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3.5 py-1 rounded-full text-xs font-bold mb-3 border border-emerald-200">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            <span>Account Active & Ready</span>
+            <span>{isUrdu ? 'اکاؤنٹ فعال اور تیار ہے' : 'Account Active & Ready'}</span>
           </div>
 
           <h2 className="text-3xl font-extrabold text-gray-900 font-display mb-2">
-            Welcome to LifeLink!
+            {isUrdu ? 'لائف لنک میں خوش آمدید!' : 'Welcome to LifeLink!'}
           </h2>
           <p className="text-gray-600 text-sm mb-6 max-w-md mx-auto">
             {successData.isEmergencyPatient
-              ? 'Your patient emergency account is active, and your urgent blood request has been broadcasted to verified donors in your area.'
-              : 'Your donor account has been successfully created. You are now part of our nationwide lifesaver network.'}
+              ? (isUrdu 
+                  ? 'آپ کا مریض ایمرجنسی اکاؤنٹ فعال ہو گیا ہے اور آپ کے علاقے کے تصدیق شدہ ڈونرز کو فوری الرٹ نشر کر دیا گیا ہے۔' 
+                  : 'Your patient emergency account is active, and your urgent blood request has been broadcasted to verified donors in your area.')
+              : (isUrdu 
+                  ? 'آپ کا ڈونر اکاؤنٹ کامیابی سے بن گیا ہے۔ اب آپ ہمارے ملک گیر لائف سیور نیٹ ورک کا حصہ ہیں۔' 
+                  : 'Your donor account has been successfully created. You are now part of our nationwide lifesaver network.')}
           </p>
 
           <div className="bg-slate-50 rounded-2xl p-6 mb-8 text-left space-y-2.5 border border-gray-200 text-xs sm:text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-500">Name:</span>
+              <span className="text-gray-500">{isUrdu ? 'نام:' : 'Name:'}</span>
               <span className="font-semibold text-gray-900">{successData.name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500">Role:</span>
-              <span className="font-bold text-red-600 capitalize">{successData.userType}</span>
+              <span className="text-gray-500">{isUrdu ? 'کردار:' : 'Role:'}</span>
+              <span className="font-bold text-red-600 capitalize">
+                {isUrdu ? (successData.userType === 'donor' ? 'ڈونر' : 'مریض') : successData.userType}
+              </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500">Blood Group:</span>
+              <span className="text-gray-500">{isUrdu ? 'بلڈ گروپ:' : 'Blood Group:'}</span>
               <span className="font-bold text-red-600 px-2.5 py-0.5 bg-red-100 rounded-md">
                 {successData.bloodGroup}
               </span>
             </div>
             {successData.hospital && (
               <div className="flex justify-between">
-                <span className="text-gray-500">Hospital:</span>
+                <span className="text-gray-500">{isUrdu ? 'ہسپتال:' : 'Hospital:'}</span>
                 <span className="font-semibold text-gray-900">{successData.hospital}</span>
               </div>
             )}
             <div className="flex justify-between">
-              <span className="text-gray-500">Emergency Helpline:</span>
+              <span className="text-gray-500">{isUrdu ? 'ایمرجنسی ہیلپ لائن:' : 'Emergency Helpline:'}</span>
               <span className="font-bold text-gray-900">03494996898</span>
             </div>
           </div>
@@ -385,14 +393,14 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
               onClick={onNavigateLogin}
               className="btn-medical text-white w-full py-3.5 rounded-xl font-bold shadow-medical flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>Login to Access Your Dashboard</span>
+              <span>{isUrdu ? 'اپنے ڈیش بورڈ کیلئے لاگ ان کریں' : 'Login to Access Your Dashboard'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={onNavigateHome}
               className="w-full py-2.5 text-xs text-gray-600 hover:text-gray-900 font-semibold"
             >
-              Return to Homepage
+              {isUrdu ? 'ہوم پیج پر واپس جائیں' : 'Return to Homepage'}
             </button>
           </div>
         </div>
@@ -407,17 +415,31 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 bg-red-100/80 border border-red-200 text-red-700 px-4 py-1.5 rounded-full text-xs font-semibold mb-3">
             <Droplets className="w-4 h-4 text-red-600" />
-            <span>Official LifeLink Medical Network</span>
+            <span>{isUrdu ? 'آفیشل لائف لنک میڈیکل نیٹ ورک' : 'Official LifeLink Medical Network'}</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold font-display text-gray-900 tracking-tight mb-2">
-            Create Your{' '}
-            <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
-              LifeLink Account
-            </span>
+            {isUrdu ? (
+              <>
+                اپنا{' '}
+                <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+                  لائف لنک اکاؤنٹ
+                </span>{' '}
+                بنائیں
+              </>
+            ) : (
+              <>
+                Create Your{' '}
+                <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+                  LifeLink Account
+                </span>
+              </>
+            )}
           </h1>
           <p className="text-gray-600 text-sm sm:text-base max-w-xl mx-auto font-light">
-            Connecting patients in emergency distress with verified blood donors across Pakistan.
+            {isUrdu 
+              ? 'پورے پاکستان میں ہنگامی صورتحال کے شکار مریضوں کو تصدیق شدہ رضاکار بلڈ ڈونرز سے جوڑنا۔' 
+              : 'Connecting patients in emergency distress with verified blood donors across Pakistan.'}
           </p>
 
           {/* Role Switcher Tabs */}
@@ -432,7 +454,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
               }`}
             >
               <Heart className={`w-4 h-4 ${formData.userType === 'donor' ? 'fill-current text-red-600' : 'text-gray-400'}`} />
-              <span>Blood Donor</span>
+              <span>{isUrdu ? 'خون کا عطیہ دہندہ (ڈونر)' : 'Blood Donor'}</span>
             </button>
 
             <button
@@ -445,7 +467,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
               }`}
             >
               <Zap className="w-4 h-4" />
-              <span>Patient (1-Step Fast Track)</span>
+              <span>{isUrdu ? 'مریض (فوری طریقہ)' : 'Patient (1-Step Fast Track)'}</span>
             </button>
           </div>
         </div>
@@ -462,13 +484,17 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
               </div>
               <div className="flex-1 text-xs">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span className="font-bold text-red-900 text-sm">Emergency Fast-Track Flow</span>
+                  <span className="font-bold text-red-900 text-sm">
+                    {isUrdu ? 'ہنگامی فاسٹ ٹریک طریقہ' : 'Emergency Fast-Track Flow'}
+                  </span>
                   <span className="px-2 py-0.5 rounded-full bg-red-200/80 text-red-800 text-[10px] font-extrabold uppercase">
-                    Zero Redundant Questions
+                    {isUrdu ? 'بغیر کسی اضافی سوال کے' : 'Zero Redundant Questions'}
                   </span>
                 </div>
                 <p className="text-red-800/90 leading-relaxed">
-                  We know you are in a rush. Fill in only your urgent transfusion requirements below — our matching engine will alert active donors nearby instantly.
+                  {isUrdu 
+                    ? 'ہم جانتے ہیں کہ آپ ایمرجنسی میں ہیں۔ نیچے صرف اپنی فوری مطلوبہ معلومات درج کریں — ہمارا خودکار نظام قریبی ڈونرز کو فوراً الرٹ بھیج دے گا۔' 
+                    : 'We know you are in a rush. Fill in only your urgent transfusion requirements below — our matching engine will alert active donors nearby instantly.'}
                 </p>
               </div>
             </div>
@@ -486,7 +512,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
               <div>
                 <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <Droplets className="w-3.5 h-3.5 text-red-600" />
-                  <span>Select Blood Group Needed *</span>
+                  <span>{isUrdu ? 'مطلوبہ بلڈ گروپ منتخب کریں *' : 'Select Blood Group Needed *'}</span>
                 </label>
                 <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
                   {bloodGroups.map((bg) => (
@@ -511,7 +537,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                    Patient / Requester Name *
+                    {isUrdu ? 'مریض یا درخواست گزار کا نام *' : 'Patient / Requester Name *'}
                   </label>
                   <div className="relative">
                     <User className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -520,7 +546,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleChange}
-                      placeholder="e.g., Ali Ahmed (Patient)"
+                      placeholder={isUrdu ? 'مثلاً علی احمد (مریض)' : 'e.g., Ali Ahmed (Patient)'}
                       className="w-full pl-10 pr-3.5 py-3 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                     />
                   </div>
@@ -528,7 +554,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                    Contact Phone Number (for Donors to Call) *
+                    {isUrdu ? 'رابطہ فون نمبر (ڈونرز کے رابطہ کیلئے) *' : 'Contact Phone Number (for Donors to Call) *'}
                   </label>
                   <div className="relative">
                     <Phone className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -548,7 +574,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                    Hospital / Clinic & City *
+                    {isUrdu ? 'ہسپتال یا کلینک اور شہر *' : 'Hospital / Clinic & City *'}
                   </label>
                   <button
                     type="button"
@@ -557,7 +583,11 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                     className="inline-flex items-center gap-1.5 text-xs text-red-600 hover:text-red-700 font-bold cursor-pointer"
                   >
                     <Navigation className="w-3.5 h-3.5" />
-                    <span>{locating ? 'Detecting Location...' : 'Auto-Detect Hospital Location'}</span>
+                    <span>
+                      {locating 
+                        ? (isUrdu ? 'مقام تلاش کیا جا رہا ہے...' : 'Detecting Location...') 
+                        : (isUrdu ? 'ہسپتال کا مقام خودکار تلاش کریں' : 'Auto-Detect Hospital Location')}
+                    </span>
                   </button>
                 </div>
 
@@ -568,7 +598,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
-                    placeholder="e.g., Services Hospital, Jail Road, Lahore"
+                    placeholder={isUrdu ? 'مثلاً سروسز ہسپتال، جیل روڈ، لاہور' : 'e.g., Services Hospital, Jail Road, Lahore'}
                     className="w-full pl-10 pr-3.5 py-3 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                   />
                 </div>
@@ -589,7 +619,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                    Units of Blood Needed
+                    {isUrdu ? 'خون کی درکار بوتلیں' : 'Units of Blood Needed'}
                   </label>
                   <div className="flex items-center gap-3">
                     <button
@@ -600,7 +630,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                       <Minus className="w-4 h-4" />
                     </button>
                     <div className="flex-1 text-center py-2.5 px-4 rounded-xl bg-slate-50 border border-gray-200 font-bold text-gray-900 text-sm">
-                      {patientUnits} {patientUnits === 1 ? 'Unit' : 'Units'} (Bag)
+                      {isUrdu ? `${patientUnits} بوتل (یونٹ)` : `${patientUnits} ${patientUnits === 1 ? 'Unit' : 'Units'} (Bag)`}
                     </div>
                     <button
                       type="button"
@@ -614,16 +644,22 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                    Urgency Level
+                    {isUrdu ? 'ہنگامی نوعیت' : 'Urgency Level'}
                   </label>
                   <select
                     value={patientUrgency}
                     onChange={(e) => setPatientUrgency(e.target.value)}
                     className="w-full px-3.5 py-3 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                   >
-                    <option value="Critical (ICU / Emergency)">🚨 Immediate (ICU / Surgery)</option>
-                    <option value="Urgent (Within 6 Hours)">⏱️ Urgent (Within 6 Hours)</option>
-                    <option value="Planned (Within 24 Hours)">📅 Planned (Within 24 Hours)</option>
+                    <option value="Critical (ICU / Emergency)">
+                      {isUrdu ? '🚨 فوری درکار (آئی سی یو / آپریشن)' : '🚨 Immediate (ICU / Surgery)'}
+                    </option>
+                    <option value="Urgent (Within 6 Hours)">
+                      {isUrdu ? '⏱️ فوری (۶ گھنٹوں کے اندر)' : '⏱️ Urgent (Within 6 Hours)'}
+                    </option>
+                    <option value="Planned (Within 24 Hours)">
+                      {isUrdu ? '📅 منصوبہ بند (۲۴ گھنٹوں میں)' : '📅 Planned (Within 24 Hours)'}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -632,7 +668,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                    Account Email (for Portal Login) *
+                    {isUrdu ? 'اکاؤنٹ ای میل (پورٹل لاگ ان کیلئے) *' : 'Account Email (for Portal Login) *'}
                   </label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -649,7 +685,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                    Password *
+                    {isUrdu ? 'پاس ورڈ *' : 'Password *'}
                   </label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -682,12 +718,12 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                   {isSubmitting ? (
                     <>
                       <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                      <span>Broadcasting Urgent Request to Donors...</span>
+                      <span>{isUrdu ? 'ڈونرز کو فوری الرٹ بھیجا جا رہا ہے...' : 'Broadcasting Urgent Request to Donors...'}</span>
                     </>
                   ) : (
                     <>
                       <Zap className="w-5 h-5" />
-                      <span>🚨 Register & Broadcast Urgent Request to Donors</span>
+                      <span>{isUrdu ? '🚨 رجسٹر کریں اور ڈونرز کو فوری الرٹ بھیجیں' : '🚨 Register & Broadcast Urgent Request to Donors'}</span>
                     </>
                   )}
                 </button>
@@ -695,7 +731,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
 
               <div className="text-center pt-2">
                 <p className="text-xs text-gray-500">
-                  Prefer direct phone coordination? Call our 24/7 helpline immediately:{' '}
+                  {isUrdu ? 'فون پر فوری رابطہ ترجیح ہے؟ ہماری ۲۴ گھنٹے ہیلپ لائن پر ابھی کال کریں:' : 'Prefer direct phone coordination? Call our 24/7 helpline immediately:'}{' '}
                   <a href="tel:03494996898" className="font-bold text-red-600 hover:underline">
                     03494996898
                   </a>
@@ -711,12 +747,20 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
             {/* Multi-Step Stepper & Progress Bar for Donors */}
             <div className="mb-8 max-w-3xl mx-auto">
               <div className="flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-600 mb-2">
-                <span>Step {currentStep} of {totalSteps}: {
-                  currentStep === 1 ? 'Donor Profile' :
-                  currentStep === 2 ? 'Personal Info' :
-                  currentStep === 3 ? 'Blood & Location' : 'Terms & Verification'
-                }</span>
-                <span className="text-red-600 font-bold">{progressPercent}% Complete</span>
+                <span>
+                  {isUrdu 
+                    ? `مرحلہ ${currentStep} از ${totalSteps}: ${
+                        currentStep === 1 ? 'ڈونر پروفائل' :
+                        currentStep === 2 ? 'ذاتی معلومات' :
+                        currentStep === 3 ? 'بلڈ گروپ اور مقام' : 'شرائط و تصدیق'
+                      }`
+                    : `Step ${currentStep} of ${totalSteps}: ${
+                        currentStep === 1 ? 'Donor Profile' :
+                        currentStep === 2 ? 'Personal Info' :
+                        currentStep === 3 ? 'Blood & Location' : 'Terms & Verification'
+                      }`}
+                </span>
+                <span className="text-red-600 font-bold">{progressPercent}% {isUrdu ? 'مکمل' : 'Complete'}</span>
               </div>
 
               <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
@@ -741,34 +785,54 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                 {currentStep === 1 && (
                   <div className="space-y-6 animate-fade-in">
                     <div className="text-center mb-6">
-                      <h2 className="text-2xl font-bold text-gray-900 font-display">Become a Volunteer Blood Donor</h2>
-                      <p className="text-gray-500 text-xs sm:text-sm">Join verified heroes ready to answer emergency requests</p>
+                      <h2 className="text-2xl font-bold text-gray-900 font-display">
+                        {isUrdu ? 'رضاکار بلڈ ڈونر بنیں' : 'Become a Volunteer Blood Donor'}
+                      </h2>
+                      <p className="text-gray-500 text-xs sm:text-sm">
+                        {isUrdu ? 'تصدیق شدہ ہیروز میں شامل ہوں جو ہنگامی کالز پر مدد کیلئے تیار رہتے ہیں' : 'Join verified heroes ready to answer emergency requests'}
+                      </p>
                     </div>
 
                     <div className="rounded-2xl p-6 sm:p-8 border-2 border-red-500 bg-red-50/40 text-center">
                       <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white mx-auto mb-4 shadow-md">
                         <Heart className="w-8 h-8 fill-current" />
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">Verified Blood Donor Network</h3>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {isUrdu ? 'تصدیق شدہ بلڈ ڈونر نیٹ ورک' : 'Verified Blood Donor Network'}
+                      </h3>
                       <p className="text-gray-600 text-xs sm:text-sm max-w-md mx-auto mb-6 leading-relaxed">
-                        Every donation saves up to 3 human lives. By completing your donor profile, you will be notified whenever a compatible patient in your city requires urgent blood.
+                        {isUrdu 
+                          ? 'خون کا ہر عطیہ ۳ انسانی جانیں بچا سکتا ہے۔ اپنا ڈونر پروفائل مکمل کرنے پر آپ کو اپنے شہر میں خون کے فوری کیسز کے الرٹس موصول ہوں گے۔' 
+                          : 'Every donation saves up to 3 human lives. By completing your donor profile, you will be notified whenever a compatible patient in your city requires urgent blood.'}
                       </p>
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left text-xs">
                         <div className="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500 mb-1" />
-                          <span className="font-bold text-gray-900 block">Emergency Alerts</span>
-                          <span className="text-gray-500">Real-time alerts when matched</span>
+                          <span className="font-bold text-gray-900 block">
+                            {isUrdu ? 'ہنگامی الرٹس' : 'Emergency Alerts'}
+                          </span>
+                          <span className="text-gray-500">
+                            {isUrdu ? 'مریض کی ضرورت پر فوری لائیو الرٹ' : 'Real-time alerts when matched'}
+                          </span>
                         </div>
                         <div className="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500 mb-1" />
-                          <span className="font-bold text-gray-900 block">Medical Safety</span>
-                          <span className="text-gray-500">Standard 90-day donation interval</span>
+                          <span className="font-bold text-gray-900 block">
+                            {isUrdu ? 'طبی حفاظت' : 'Medical Safety'}
+                          </span>
+                          <span className="text-gray-500">
+                            {isUrdu ? 'عطیات کا معیاری ۹۰ دن کا وقفہ' : 'Standard 90-day donation interval'}
+                          </span>
                         </div>
                         <div className="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500 mb-1" />
-                          <span className="font-bold text-gray-900 block">Direct Chat</span>
-                          <span className="text-gray-500">Coordinate directly with hospitals</span>
+                          <span className="font-bold text-gray-900 block">
+                            {isUrdu ? 'براہِ راست چیٹ' : 'Direct Chat'}
+                          </span>
+                          <span className="text-gray-500">
+                            {isUrdu ? 'ہسپتال اور مریض سے فوری رابطہ' : 'Coordinate directly with hospitals'}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -779,14 +843,18 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                 {currentStep === 2 && (
                   <div className="space-y-5 animate-fade-in">
                     <div className="text-center mb-6">
-                      <h2 className="text-2xl font-bold text-gray-900 font-display">Personal Details</h2>
-                      <p className="text-gray-500 text-xs sm:text-sm">Enter your donor identification details</p>
+                      <h2 className="text-2xl font-bold text-gray-900 font-display">
+                        {isUrdu ? 'ذاتی معلومات' : 'Personal Details'}
+                      </h2>
+                      <p className="text-gray-500 text-xs sm:text-sm">
+                        {isUrdu ? 'اپنی شناخت اور بنیادی تفصیلات درج کریں' : 'Enter your donor identification details'}
+                      </p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="sm:col-span-2">
                         <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                          Full Name *
+                          {isUrdu ? 'مکمل نام *' : 'Full Name *'}
                         </label>
                         <div className="relative">
                           <User className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -803,7 +871,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
 
                       <div>
                         <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                          Email Address *
+                          {isUrdu ? 'ای میل ایڈریس *' : 'Email Address *'}
                         </label>
                         <div className="relative">
                           <Mail className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -820,7 +888,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
 
                       <div>
                         <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                          Phone Number *
+                          {isUrdu ? 'موبائل نمبر *' : 'Phone Number *'}
                         </label>
                         <div className="relative">
                           <Phone className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -837,7 +905,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
 
                       <div>
                         <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                          Age (Must be 18 - 65) *
+                          {isUrdu ? 'عمر (۱۸ سے ۶۵ سال) *' : 'Age (Must be 18 - 65) *'}
                         </label>
                         <input
                           type="number"
@@ -853,7 +921,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
 
                       <div>
                         <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                          Password (min 6 characters) *
+                          {isUrdu ? 'پاس ورڈ (کم از کم ۶ حروف) *' : 'Password (min 6 characters) *'}
                         </label>
                         <div className="relative">
                           <Lock className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -877,7 +945,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
 
                       <div className="sm:col-span-2">
                         <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                          Confirm Password *
+                          {isUrdu ? 'پاس ورڈ کی تصدیق کریں *' : 'Confirm Password *'}
                         </label>
                         <div className="relative">
                           <Lock className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -899,14 +967,18 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                 {currentStep === 3 && (
                   <div className="space-y-6 animate-fade-in">
                     <div className="text-center mb-6">
-                      <h2 className="text-2xl font-bold text-gray-900 font-display">Blood Group & Location</h2>
-                      <p className="text-gray-500 text-xs sm:text-sm">Set your donor blood type and area for emergency matching</p>
+                      <h2 className="text-2xl font-bold text-gray-900 font-display">
+                        {isUrdu ? 'بلڈ گروپ اور مقام' : 'Blood Group & Location'}
+                      </h2>
+                      <p className="text-gray-500 text-xs sm:text-sm">
+                        {isUrdu ? 'ہنگامی ضرورت کیلئے اپنا بلڈ گروپ اور رہائشی علاقہ منتخب کریں' : 'Set your donor blood type and area for emergency matching'}
+                      </p>
                     </div>
 
                     {/* Blood Group Selector */}
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
-                        Select Your Blood Group *
+                        {isUrdu ? 'اپنا بلڈ گروپ منتخب کریں *' : 'Select Your Blood Group *'}
                       </label>
                       <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
                         {bloodGroups.map((bg) => (
@@ -930,7 +1002,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                     {/* Residential Address */}
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                        Address (City & Area) *
+                        {isUrdu ? 'پتہ (شہر اور علاقہ) *' : 'Address (City & Area) *'}
                       </label>
                       <div className="relative">
                         <MapPin className="w-5 h-5 text-gray-400 absolute left-4 top-3" />
@@ -939,7 +1011,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                           rows="2"
                           value={formData.address}
                           onChange={handleChange}
-                          placeholder="e.g., Gulberg III, Lahore"
+                          placeholder={isUrdu ? 'مثلاً گلبرگ، لاہور' : 'e.g., Gulberg III, Lahore'}
                           className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                         />
                       </div>
@@ -951,10 +1023,10 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                         <div>
                           <div className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
                             <MapPin className="w-3.5 h-3.5 text-red-600" />
-                            <span>Auto-Detect My Location (GPS / Network)</span>
+                            <span>{isUrdu ? 'میرا مقام خودکار تلاش کریں (GPS / انٹرنیٹ)' : 'Auto-Detect My Location (GPS / Network)'}</span>
                           </div>
                           <p className="text-gray-500 text-xs mt-0.5">
-                            Matches you accurately with nearby patients
+                            {isUrdu ? 'آپ کو قریبی مریضوں کے ساتھ درست طور پر ملاتا ہے' : 'Matches you accurately with nearby patients'}
                           </p>
                         </div>
 
@@ -973,17 +1045,17 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                           {locating ? (
                             <>
                               <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                              <span>Detecting...</span>
+                              <span>{isUrdu ? 'تلاش جاری ہے...' : 'Detecting...'}</span>
                             </>
                           ) : formData.latitude ? (
                             <>
                               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                              <span>Location Saved</span>
+                              <span>{isUrdu ? 'مقام محفوظ ہو گیا' : 'Location Saved'}</span>
                             </>
                           ) : (
                             <>
                               <Navigation className="w-3.5 h-3.5" />
-                              <span>Detect Location</span>
+                              <span>{isUrdu ? 'مقام تلاش کریں' : 'Detect Location'}</span>
                             </>
                           )}
                         </button>
@@ -1004,14 +1076,14 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                     {/* Medical Conditions */}
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                        Medical Notes (Optional)
+                        {isUrdu ? 'طبی معلومات یا نوٹس (اختیاری)' : 'Medical Notes (Optional)'}
                       </label>
                       <input
                         type="text"
                         name="medicalConditions"
                         value={formData.medicalConditions}
                         onChange={handleChange}
-                        placeholder="e.g., None, healthy, last donated 4 months ago"
+                        placeholder={isUrdu ? 'مثلاً بالکل تندرست، آخری بار ۴ ماہ پہلے خون دیا تھا' : 'e.g., None, healthy, last donated 4 months ago'}
                         className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                       />
                     </div>
@@ -1022,21 +1094,25 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                 {currentStep === 4 && (
                   <div className="space-y-6 animate-fade-in">
                     <div className="text-center mb-6">
-                      <h2 className="text-2xl font-bold text-gray-900 font-display">Terms & Verification</h2>
-                      <p className="text-gray-500 text-xs sm:text-sm">Finalize your volunteer registration</p>
+                      <h2 className="text-2xl font-bold text-gray-900 font-display">
+                        {isUrdu ? 'شرائط اور حتمی توثیق' : 'Terms & Verification'}
+                      </h2>
+                      <p className="text-gray-500 text-xs sm:text-sm">
+                        {isUrdu ? 'اپنی رضاکارانہ رجسٹریشن مکمل کریں' : 'Finalize your volunteer registration'}
+                      </p>
                     </div>
 
                     {/* Emergency Contact */}
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                        Emergency Contact (Optional)
+                        {isUrdu ? 'ہنگامی رابطہ نمبر (اختیاری)' : 'Emergency Contact (Optional)'}
                       </label>
                       <input
                         type="text"
                         name="emergencyContact"
                         value={formData.emergencyContact}
                         onChange={handleChange}
-                        placeholder="e.g., Brother - 03001234567"
+                        placeholder={isUrdu ? 'مثلاً بھائی - 03001234567' : 'e.g., Brother - 03001234567'}
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
                       />
                     </div>
@@ -1052,8 +1128,12 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                           className="mt-1 w-4 h-4 text-red-600 rounded border-gray-300 focus:ring-red-500"
                         />
                         <div className="text-xs text-gray-600 leading-relaxed">
-                          <span className="font-bold text-gray-900 block mb-0.5">Privacy & Medical Protection</span>
-                          Your personal information will be stored securely and only shared with hospitals and patients in immediate distress.
+                          <span className="font-bold text-gray-900 block mb-0.5">
+                            {isUrdu ? 'رازداری اور طبی تحفظ' : 'Privacy & Medical Protection'}
+                          </span>
+                          {isUrdu 
+                            ? 'آپ کی معلومات محفوظ رکھی جائیں گی اور صرف خون کی اشد ضرورت کے وقت ہسپتال یا مریض کے ساتھ شیئر کی جائیں گی۔' 
+                            : 'Your personal information will be stored securely and only shared with hospitals and patients in immediate distress.'}
                         </div>
                       </label>
 
@@ -1066,8 +1146,12 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                           className="mt-1 w-4 h-4 text-red-600 rounded border-gray-300 focus:ring-red-500"
                         />
                         <div className="text-xs text-gray-600 leading-relaxed">
-                          <span className="font-bold text-gray-900 block mb-0.5">Terms of LifeLink Network</span>
-                          I certify that I am between 18 and 65 years of age and willing to donate blood voluntarily to save lives.
+                          <span className="font-bold text-gray-900 block mb-0.5">
+                            {isUrdu ? 'لائف لنک نیٹ ورک کی شرائط' : 'Terms of LifeLink Network'}
+                          </span>
+                          {isUrdu 
+                            ? 'میں تصدیق کرتا ہوں کہ میری عمر ۱۸ سے ۶۵ سال کے درمیان ہے اور میں انسانی جانیں بچانے کیلئے رضاکارانہ خون کا عطیہ دینے کو تیار ہوں۔' 
+                            : 'I certify that I am between 18 and 65 years of age and willing to donate blood voluntarily to save lives.'}
                         </div>
                       </label>
                     </div>
@@ -1083,7 +1167,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                       className="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 font-semibold text-sm flex items-center gap-1.5 transition-all cursor-pointer"
                     >
                       <ArrowLeft className="w-4 h-4" />
-                      <span>Previous</span>
+                      <span>{isUrdu ? 'پچھلا مرحلہ' : 'Previous'}</span>
                     </button>
                   ) : (
                     <button
@@ -1091,7 +1175,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                       onClick={onNavigateHome}
                       className="text-gray-500 hover:text-gray-800 text-xs sm:text-sm font-medium cursor-pointer"
                     >
-                      ← Back to Home
+                      {isUrdu ? '← واپس ہوم پیج' : '← Back to Home'}
                     </button>
                   )}
 
@@ -1101,7 +1185,7 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                       onClick={handleNext}
                       className="btn-medical text-white px-7 py-3 rounded-xl font-semibold text-sm shadow-medical flex items-center gap-2 cursor-pointer"
                     >
-                      <span>Next Step</span>
+                      <span>{isUrdu ? 'اگلا مرحلہ' : 'Next Step'}</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   ) : (
@@ -1113,12 +1197,12 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
                       {isSubmitting ? (
                         <>
                           <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                          <span>Creating Donor Account...</span>
+                          <span>{isUrdu ? 'ڈونر اکاؤنٹ بنایا جا رہا ہے...' : 'Creating Donor Account...'}</span>
                         </>
                       ) : (
                         <>
                           <CheckCircle2 className="w-4 h-4" />
-                          <span>Complete Donor Registration</span>
+                          <span>{isUrdu ? 'ڈونر رجسٹریشن مکمل کریں' : 'Complete Donor Registration'}</span>
                         </>
                       )}
                     </button>
@@ -1133,13 +1217,13 @@ export default function Register({ onNavigateHome, onNavigateLogin }) {
         {onNavigateLogin && (
           <div className="mt-8 text-center">
             <p className="text-xs text-gray-600">
-              Already registered on LifeLink?{' '}
+              {isUrdu ? 'پہلے سے لائف لنک پر رجسٹرڈ ہیں؟ ' : 'Already registered on LifeLink? '}
               <button
                 type="button"
                 onClick={onNavigateLogin}
                 className="text-red-600 font-bold hover:text-red-700 hover:underline cursor-pointer"
               >
-                Sign in here
+                {isUrdu ? 'یہاں سائن ان کریں' : 'Sign in here'}
               </button>
             </p>
           </div>

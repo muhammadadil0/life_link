@@ -4,8 +4,10 @@ import {
   CheckCircle2, ArrowRight, ArrowLeft, ShieldCheck, User, Activity 
 } from 'lucide-react';
 import { loginUser } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Login({ onNavigateHome, onNavigateRegister, onLoginSuccess }) {
+  const { t, isUrdu } = useLanguage();
   const [selectedRole, setSelectedRole] = useState('donor'); // 'donor' or 'patient'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,12 +34,12 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
     setErrorMsg('');
 
     if (!email.trim() || !password) {
-      setErrorMsg('Please enter both your email address and password.');
+      setErrorMsg(isUrdu ? 'براہِ کرم اپنا ای میل ایڈریس اور پاس ورڈ دونوں درج کریں۔' : 'Please enter both your email address and password.');
       return;
     }
 
     if (!email.includes('@')) {
-      setErrorMsg('Please enter a valid email address.');
+      setErrorMsg(isUrdu ? 'براہِ کرم درست ای میل ایڈریس درج کریں۔' : 'Please enter a valid email address.');
       return;
     }
 
@@ -54,7 +56,7 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
         onLoginSuccess(res.user);
       }
     } else {
-      setErrorMsg(res.message || 'Invalid email or password. Please try again.');
+      setErrorMsg(res.message || (isUrdu ? 'غلط ای میل یا پاس ورڈ۔ دوبارہ کوشش کریں۔' : 'Invalid email or password. Please try again.'));
     }
   };
 
@@ -68,27 +70,41 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
           </div>
 
           <h2 className="text-2xl font-extrabold text-gray-900 font-display mb-1">
-            Welcome Back, {loggedInUser.name}!
+            {isUrdu ? `خوش آمدید، ${loggedInUser.name}!` : `Welcome Back, ${loggedInUser.name}!`}
           </h2>
           <p className="text-gray-500 text-xs sm:text-sm mb-6">
-            Signed into LifeLink as{' '}
-            <span className="font-bold text-red-600 uppercase tracking-wide">
-              {loggedInUser.userType}
-            </span>.
+            {isUrdu ? (
+              <>
+                لائف لنک میں بطور{' '}
+                <span className="font-bold text-red-600 uppercase tracking-wide">
+                  {loggedInUser.userType === 'donor' ? 'خون کا عطیہ دہندہ (ڈونر)' : 'مریض'}
+                </span>{' '}
+                سائن ان ہوئے۔
+              </>
+            ) : (
+              <>
+                Signed into LifeLink as{' '}
+                <span className="font-bold text-red-600 uppercase tracking-wide">
+                  {loggedInUser.userType}
+                </span>.
+              </>
+            )}
           </p>
 
           <div className="bg-slate-50 rounded-2xl p-5 mb-6 text-left space-y-2 border border-gray-200 text-xs sm:text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-500">Email:</span>
+              <span className="text-gray-500">{isUrdu ? 'ای میل:' : 'Email:'}</span>
               <span className="font-semibold text-gray-900">{loggedInUser.email}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500">Role:</span>
-              <span className="font-bold text-red-600 capitalize">{loggedInUser.userType}</span>
+              <span className="text-gray-500">{isUrdu ? 'کردار:' : 'Role:'}</span>
+              <span className="font-bold text-red-600 capitalize">
+                {isUrdu ? (loggedInUser.userType === 'donor' ? 'ڈونر' : 'مریض') : loggedInUser.userType}
+              </span>
             </div>
             {loggedInUser.bloodGroup && (
               <div className="flex justify-between">
-                <span className="text-gray-500">Blood Group:</span>
+                <span className="text-gray-500">{isUrdu ? 'بلڈ گروپ:' : 'Blood Group:'}</span>
                 <span className="font-bold text-red-600 px-2 py-0.5 bg-red-100 rounded text-xs">
                   {loggedInUser.bloodGroup}
                 </span>
@@ -101,7 +117,7 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
               onClick={onNavigateHome}
               className="btn-medical text-white w-full py-3.5 rounded-xl font-bold shadow-medical flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>Continue to Dashboard</span>
+              <span>{isUrdu ? 'ڈیش بورڈ پر جائیں' : 'Continue to Dashboard'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -136,7 +152,7 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
                 LifeLink
               </span>
               <div className="text-[10px] text-gray-500 font-semibold tracking-wider uppercase">
-                Medical Network
+                {t('brand_sub', 'Medical Network')}
               </div>
             </div>
           </button>
@@ -146,15 +162,26 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
         <div className="glass-card bg-white/95 rounded-3xl p-7 sm:p-9 shadow-2xl border border-red-100 relative">
           <div className="text-center mb-6">
             <h1 className="text-2xl sm:text-3xl font-extrabold font-display text-gray-900 tracking-tight mb-2">
-              Sign In to{' '}
-              <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
-                LifeLink
-              </span>
+              {isUrdu ? (
+                <>
+                  <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+                    لائف لنک
+                  </span>{' '}
+                  میں سائن ان کریں
+                </>
+              ) : (
+                <>
+                  Sign In to{' '}
+                  <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+                    LifeLink
+                  </span>
+                </>
+              )}
             </h1>
             <p className="text-gray-500 text-xs sm:text-sm">
               {selectedRole === 'donor' 
-                ? 'Sign in to access your Donor Portal and active emergency calls' 
-                : 'Sign in to access your Patient Portal and manage blood requests'}
+                ? (isUrdu ? 'اپنے ڈونر پورٹل اور ہنگامی الرٹس تک رسائی کیلئے سائن ان کریں' : 'Sign in to access your Donor Portal and active emergency calls')
+                : (isUrdu ? 'اپنے مریض پورٹل اور بلڈ درخواستوں کے انتظام کیلئے سائن ان کریں' : 'Sign in to access your Patient Portal and manage blood requests')}
             </p>
           </div>
 
@@ -170,7 +197,7 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
               }`}
             >
               <Heart className={`w-3.5 h-3.5 ${selectedRole === 'donor' ? 'fill-current text-red-600' : 'text-gray-400'}`} />
-              <span>Blood Donor</span>
+              <span>{isUrdu ? 'خون کا عطیہ دہندہ (ڈونر)' : 'Blood Donor'}</span>
             </button>
 
             <button
@@ -183,7 +210,7 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
               }`}
             >
               <Activity className="w-3.5 h-3.5" />
-              <span>Patient / Family</span>
+              <span>{isUrdu ? 'مریض / خاندان' : 'Patient / Family'}</span>
             </button>
           </div>
 
@@ -200,7 +227,7 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
             {/* Email Field */}
             <div>
               <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                Email Address *
+                {isUrdu ? 'ای میل ایڈریس *' : 'Email Address *'}
               </label>
               <div className="relative">
                 <Mail className="w-5 h-5 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -208,7 +235,7 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
                   type="email"
                   value={email}
                   onChange={(e) => { setEmail(e.target.value); setErrorMsg(''); }}
-                  placeholder="Enter your registered email"
+                  placeholder={isUrdu ? 'اپنا رجسٹرڈ ای میل درج کریں' : 'Enter your registered email'}
                   required
                   className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all"
                 />
@@ -219,14 +246,14 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  Password *
+                  {isUrdu ? 'پاس ورڈ *' : 'Password *'}
                 </label>
                 <button
                   type="button"
                   onClick={() => setShowForgotModal(true)}
                   className="text-xs text-red-600 hover:text-red-700 hover:underline font-medium cursor-pointer"
                 >
-                  Forgot password?
+                  {isUrdu ? 'پاس ورڈ بھول گئے؟' : 'Forgot password?'}
                 </button>
               </div>
               <div className="relative">
@@ -258,7 +285,9 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="w-4 h-4 text-red-600 rounded border-gray-300 focus:ring-red-500"
                 />
-                <span className="text-xs text-gray-600">Remember me on this device</span>
+                <span className="text-xs text-gray-600">
+                  {isUrdu ? 'مجھے اس ڈیوائس پر یاد رکھیں' : 'Remember me on this device'}
+                </span>
               </label>
             </div>
 
@@ -271,12 +300,16 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
               {isSubmitting ? (
                 <>
                   <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Verifying Credentials...</span>
+                  <span>{isUrdu ? 'تصدیق کی جا رہی ہے...' : 'Verifying Credentials...'}</span>
                 </>
               ) : (
                 <>
                   <ShieldCheck className="w-4 h-4" />
-                  <span>Sign In as {selectedRole === 'donor' ? 'Blood Donor' : 'Patient'}</span>
+                  <span>
+                    {isUrdu 
+                      ? `بطور ${selectedRole === 'donor' ? 'ڈونر' : 'مریض'} سائن ان کریں` 
+                      : `Sign In as ${selectedRole === 'donor' ? 'Blood Donor' : 'Patient'}`}
+                  </span>
                 </>
               )}
             </button>
@@ -285,13 +318,13 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
           {/* Switch to Register */}
           <div className="mt-7 text-center pt-5 border-t border-gray-100">
             <p className="text-xs text-gray-600">
-              Don't have an account yet?{' '}
+              {isUrdu ? 'ابھی تک اکاؤنٹ نہیں ہے؟ ' : "Don't have an account yet? "}
               <button
                 type="button"
                 onClick={onNavigateRegister}
                 className="text-red-600 font-bold hover:text-red-700 hover:underline cursor-pointer"
               >
-                Create an account
+                {isUrdu ? 'نیا اکاؤنٹ بنائیں' : 'Create an account'}
               </button>
             </p>
           </div>
@@ -305,7 +338,7 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
             className="text-xs text-gray-500 hover:text-gray-800 font-medium inline-flex items-center gap-1 cursor-pointer transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Home</span>
+            <span>{isUrdu ? 'واپس ہوم پیج' : 'Back to Home'}</span>
           </button>
         </div>
       </div>
@@ -317,13 +350,17 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
             <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <Mail className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Reset Password</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              {isUrdu ? 'پاس ورڈ دوبارہ ترتیب دیں' : 'Reset Password'}
+            </h3>
             <p className="text-gray-500 text-xs leading-relaxed mb-5">
-              Enter your registered email and we will send you password reset instructions.
+              {isUrdu 
+                ? 'اپنا رجسٹرڈ ای میل درج کریں، ہم آپ کو پاس ورڈ ری سیٹ کی ہدایات بھیجیں گے۔' 
+                : 'Enter your registered email and we will send you password reset instructions.'}
             </p>
             <input
               type="email"
-              placeholder="Enter your registered email"
+              placeholder={isUrdu ? 'اپنا رجسٹرڈ ای میل درج کریں' : 'Enter your registered email'}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-red-600"
@@ -334,17 +371,17 @@ export default function Login({ onNavigateHome, onNavigateRegister, onLoginSucce
                 onClick={() => setShowForgotModal(false)}
                 className="flex-1 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50 cursor-pointer"
               >
-                Cancel
+                {isUrdu ? 'منسوخ کریں' : 'Cancel'}
               </button>
               <button
                 type="button"
                 onClick={() => {
-                  alert('Password reset instructions have been sent to your email.');
+                  alert(isUrdu ? 'پاس ورڈ ری سیٹ کی ہدایات آپ کے ای میل پر بھیج دی گئی ہیں۔' : 'Password reset instructions have been sent to your email.');
                   setShowForgotModal(false);
                 }}
                 className="flex-1 btn-medical text-white py-2.5 rounded-xl text-xs font-bold shadow-medical cursor-pointer"
               >
-                Send Link
+                {isUrdu ? 'لنک بھیجیں' : 'Send Link'}
               </button>
             </div>
           </div>
