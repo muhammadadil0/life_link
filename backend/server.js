@@ -1,10 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const dns = require('dns');
-dns.setDefaultResultOrder('ipv4first');
+if (typeof dns.setDefaultResultOrder === 'function' && !process.env.VERCEL) {
+  dns.setDefaultResultOrder('ipv4first');
+}
 require('dotenv').config();
 
-const { connectDB, isDbConnected } = require('./config/db');
+const { connectDB, isDbConnected, getLastError } = require('./config/db');
 const { seedDatabase } = require('./config/seed');
 
 const app = express();
@@ -40,7 +42,8 @@ app.get('/api/health', (req, res) => {
     database: {
       connected: isDbConnected(),
       type: isDbConnected() ? 'MongoDB' : 'In-Memory Resilient Store',
-      uriConfigured: Boolean(process.env.MONGODB_URI && process.env.MONGODB_URI.trim().length > 0)
+      uriConfigured: Boolean(process.env.MONGODB_URI && process.env.MONGODB_URI.trim().length > 0),
+      lastError: getLastError()
     }
   });
 });

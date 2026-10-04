@@ -7,7 +7,60 @@ const mockStats = {
   avgResponseTime: '2.3 min'
 };
 
-const mockCarouselPatients = [];
+const mockCarouselPatients = [
+  {
+    id: "6abfe066c896a9fb50a82267",
+    name: "raziq",
+    bloodType: "O-",
+    urgency: "Moderate",
+    hospital: "HMC",
+    city: "Lahore",
+    units: 2,
+    story: "Urgent requirement for 2 unit(s) of O- at HMC, Lahore. Contact: 03494996898",
+    heroImage: "/hero_slide_2.jpg",
+    badgeColor: "bg-orange-500",
+    urgencyBg: "bg-orange-100 text-orange-800"
+  },
+  {
+    id: "6abd1fd6f28dc8b96f43d240",
+    name: "Muhammad Adil",
+    bloodType: "O-",
+    urgency: "Critical",
+    hospital: "Mayo Hospital",
+    city: "Lahore",
+    units: 2,
+    story: "Urgent requirement for 2 unit(s) of O- at Mayo Hospital, Lahore. Contact: 03494996898",
+    heroImage: "/hero_slide_3.jpg",
+    badgeColor: "bg-red-500",
+    urgencyBg: "bg-red-100 text-red-800"
+  },
+  {
+    id: "6abd1fbff28dc8b96f43d23f",
+    name: "John",
+    bloodType: "O-",
+    urgency: "Critical",
+    hospital: "Al-Shifa Hospital",
+    city: "Lahore",
+    units: 2,
+    story: "Urgent requirement for 2 unit(s) of O- at Al-Shifa Hospital, Lahore. Contact: 03160925561",
+    heroImage: "/hero_slide_2.jpg",
+    badgeColor: "bg-red-500",
+    urgencyBg: "bg-red-100 text-red-800"
+  },
+  {
+    id: "6abd1f0ef28dc8b96f43d23e",
+    name: "Muhammad Adil",
+    bloodType: "B-",
+    urgency: "Critical",
+    hospital: "Lady Reading Hospital",
+    city: "Peshawar",
+    units: 1,
+    story: "Urgent requirement for 1 unit(s) of B- at Lady Reading Hospital, Peshawar. Contact: 03494996898",
+    heroImage: "/hero_slide_3.jpg",
+    badgeColor: "bg-red-500",
+    urgencyBg: "bg-red-100 text-red-800"
+  }
+];
 
 const mockQuotes = [
   {

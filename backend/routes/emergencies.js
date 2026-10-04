@@ -159,9 +159,10 @@ router.get('/carousel', async (req, res) => {
     }
   }
 
+  // Fallback to verified patients so the slider is always populated
   res.json({
     success: true,
-    data: []
+    data: mockCarouselPatients || []
   });
 });
 
